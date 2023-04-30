@@ -33,14 +33,13 @@
   
   PARSER_BEGIN(JavaParser)
 
-import visitor.MyVisitor;
 import java.io.IOException;
 
   public class JavaParser {
   static void printDebugInfo(String productionName) {
 //      Token t = getToken(1);
 //      System.err.println("Parsing " + productionName + " at line " + t.beginLine + ", column " + t.beginColumn);
-      
+
     }
     public static void main(String args[]) {
       JavaParser parser;
@@ -52,7 +51,7 @@ import java.io.IOException;
       } else if (args.length == 1) {
         System.out.println("==========================================================================================================");
         System.out.println("==========================================================================================================");
-        
+
         System.out.println("Java Parser Version 1.0.2:  Reading from file " + args[0] + " . . .");
         try {
           parser = new JavaParser(new java.io.FileInputStream(args[0]));
@@ -80,6 +79,10 @@ import java.io.IOException;
          throw new RuntimeException(e);
      }
     }
+
+  }}
+
+  }}
   
   }
   

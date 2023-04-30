@@ -7,13 +7,11 @@ options {
 }
 
 PARSER_BEGIN(JavaParser)
-import visitor.MyVisitor;
 import java.io.IOException;
 import syntaxtree.*;
-import java.util.Vector;
 
 
-public class JavaParser 
+public class JavaParser
 {
    static void printDebugInfo(String productionName)
    {
@@ -76,6 +74,8 @@ class JTBToolkit {
    static NodeToken makeNodeToken(Token t) {
       return new NodeToken(t.image.intern(), t.kind, t.beginLine, t.beginColumn, t.endLine, t.endColumn);
    }
+}}
+}}
 }
 
 

@@ -7,7 +7,6 @@ options {
 }
 
 PARSER_BEGIN(JavaParser)
-import visitor.MyVisitor;
 import java.io.IOException;
 import syntaxtree.*;
 import java.util.Vector;
