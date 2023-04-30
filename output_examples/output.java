@@ -1,4 +1,4 @@
-public class DomCard {
-
-    private String name;
-}
+//public class DomCard {
+//
+//    private String name;
+//}
