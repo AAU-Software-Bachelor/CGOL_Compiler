@@ -1,0 +1,3 @@
+public class DomCard {
+    private String name{ get; private set; }
+}
