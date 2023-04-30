@@ -309,31 +309,16 @@
   void CompilationUnit() :
   {printDebugInfo("CompilationUnit");}
   {
-    [ PackageDeclaration() ]
-    ( ImportDeclaration() )*
     ( TypeDeclaration() )*
     <EOF>
   }
   
-  void PackageDeclaration() :
-  {printDebugInfo("PackageDeclaration");}
-  {
-    "package" Name() ";"
-  }
-  
-  void ImportDeclaration() :
-  {printDebugInfo("ImportDeclaration");}
-  {
-    "import" Name() [ "." "*" ] ";"
-  }
   
   void TypeDeclaration() :
   {printDebugInfo("TypeDeclaration");}
   {
     LOOKAHEAD( ( "abstract" | "final" | "public" )* "class" )
     ClassDeclaration()
-  |
-    InterfaceDeclaration()
   |
     ";"
   }
@@ -357,39 +342,9 @@
     LOOKAHEAD(2)
     StaticInitializer()
   |
-    LOOKAHEAD( [ "public" | "protected" | "private" ] Name() "(" )
-    ConstructorDeclaration()
-  |
-    LOOKAHEAD( MethodDeclarationLookahead() )
-    MethodDeclaration()
-  |
     FieldDeclaration()
   }
   
-  // This production is to determine lookahead only.
-  void MethodDeclarationLookahead() :
-  {printDebugInfo("MethodDeclarationLookahead");}
-  {
-    ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" )*
-    ResultType() <IDENTIFIER> "("
-  }
-  
-  void InterfaceDeclaration() :
-  {printDebugInfo("InterfaceDeclaration");}
-  {
-    ( "abstract" | "public" )*
-    "interface" <IDENTIFIER> [ "extends" NameList() ]
-    "{" ( InterfaceMemberDeclaration() )* "}"
-  }
-  
-  void InterfaceMemberDeclaration() :
-  {printDebugInfo("InterfaceMemberDeclaration");}
-  {
-    LOOKAHEAD( MethodDeclarationLookahead() )
-    MethodDeclaration()
-  |
-    FieldDeclaration()
-  }
 
 void FieldDeclaration() :
 {printDebugInfo("FieldDeclaration");}
