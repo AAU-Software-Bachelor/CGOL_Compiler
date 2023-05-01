@@ -7,3 +7,7 @@ java -cp lib/javacc/javacc-7.0.10.jar javacc jtb.out.jj
 javac -d build JavaParser.java
 
 java -cp build JavaParser $1
+
+
+#Delete
+rm outputs/Domcard
