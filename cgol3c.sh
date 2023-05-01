@@ -1,8 +1,9 @@
+#bin/bash
 clear
 
-java -jar ~/code/jtb.jar CGOL3.jj
-java -cp /home/blueorc/Desktop/Programs/javacc/target/javacc.jar javacc jtb.out.jj
+java -jar lib/jtb/jtb132.jar CGOL3.jj
+java -cp lib/javacc/javacc-7.0.10.jar javacc jtb.out.jj
 
-javac JavaParser.java
+javac -d build JavaParser.java
 
-java JavaParser inputfile.cgol3
+java -cp build JavaParser $1
