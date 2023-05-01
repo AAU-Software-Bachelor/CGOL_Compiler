@@ -1,4 +1,4 @@
-#bin/bash
+#!/bin/bash
 clear
 
 java -jar lib/jtb/jtb132.jar CGOL3.jj
