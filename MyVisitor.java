@@ -8,6 +8,7 @@ import visitor.DepthFirstVisitor;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Vector;
 
 public class MyVisitor extends DepthFirstVisitor {
    private String output;
@@ -40,12 +41,19 @@ public class MyVisitor extends DepthFirstVisitor {
          e.printStackTrace();
       }
    }
+   
+   public void visit(ClassBodyDeclaration n) {
+      Vector nodes = n.f0.nodes;
+      for (Object field : nodes) {
+         ((FieldDeclaration)field).accept(this);
+      }
+   }
 
    public void visit(FieldDeclaration n) {
       classBodyOutput = "";
       classBodyOutput += ((field_modifier) n.f0.nodes.get(0)).f0.choice + " ";
       classBodyOutput += ((Name) n.f1.f0.choice).f0 + " ";
-      classBodyOutput += n.f2.toString() + " ";
+      classBodyOutput += n.f2.toString() + ";\n";
       n.f3.accept(this);
       output += classBodyOutput;
    }

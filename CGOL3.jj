@@ -339,13 +339,13 @@ import java.io.IOException;
   {
     ( "abstract" | "final" | "public" )*
     "class" <IDENTIFIER> [ "extends" Name() ] [ "implements" NameList() ]
-    "{" ( ClassBodyDeclaration() )* "}"
+    "{" ClassBodyDeclaration() "}"
   }
   
   void ClassBodyDeclaration() :
   {printDebugInfo("ClassBodyDeclaration");}
   {
-    FieldDeclaration()
+    (FieldDeclaration())*
   }
   
 
@@ -369,13 +369,11 @@ void field_modifier() :
 void field_body() :
 {printDebugInfo("field_body");}
 {
-    (
-      LOOKAHEAD(3) "=" Expression() ("{" accessor_declarations() "}" | ";")
-    |
-      "{" accessor_declarations() "}"
-    |
-      ";"
-    )
+    LOOKAHEAD(3) "=" Expression() ("{" accessor_declarations() "}" | ";")
+  |
+    "{" accessor_declarations() "}"
+  |
+    ";"
 }
 
 void accessor_declarations() :

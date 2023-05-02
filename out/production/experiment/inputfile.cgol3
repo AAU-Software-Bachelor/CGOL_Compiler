@@ -1,3 +1,4 @@
 public class DomCard {
-    private String name{ get; private set; }
+    private String name { get; private set; }
+    private String email { get; private set; }
 }

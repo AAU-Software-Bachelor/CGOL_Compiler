@@ -65,7 +65,7 @@ public class DepthFirstVisitor implements Visitor {
     * f3 -> [ "extends" Name() ]
     * f4 -> [ "implements" NameList() ]
     * f5 -> "{"
-    * f6 -> ( ClassBodyDeclaration() )*
+    * f6 -> ClassBodyDeclaration()
     * f7 -> "}"
     */
    public void visit(ClassDeclaration n) {
@@ -80,7 +80,7 @@ public class DepthFirstVisitor implements Visitor {
    }
 
    /**
-    * f0 -> FieldDeclaration()
+    * f0 -> ( FieldDeclaration() )*
     */
    public void visit(ClassBodyDeclaration n) {
       n.f0.accept(this);
@@ -112,7 +112,9 @@ public class DepthFirstVisitor implements Visitor {
    }
 
    /**
-    * f0 -> ( "=" Expression() ( "{" accessor_declarations() "}" | ";" ) | "{" accessor_declarations() "}" | ";" )
+    * f0 -> "=" Expression() ( "{" accessor_declarations() "}" | ";" )
+    *       | "{" accessor_declarations() "}"
+    *       | ";"
     */
    public void visit(field_body n) {
       n.f0.accept(this);
