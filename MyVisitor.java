@@ -42,16 +42,14 @@ public class MyVisitor extends DepthFirstVisitor {
    }
    
    public void visit(ClassBodyDeclaration n) {
-      Vector nodes = n.f0.nodes;
+      Vector<Node> nodes = n.f0.nodes;
       for (Object field : nodes) {
          ((FieldDeclaration)field).accept(this);
       }
    }
 
    public void visit(FieldDeclaration n) {
-      String fieldOutput = "";
-      fieldOutput = "";
-      fieldOutput += ((field_modifier) n.f0.nodes.get(0)).f0.choice + " ";
+      String fieldOutput = ((field_modifier) n.f0.nodes.get(0)).f0.choice + " ";
       fieldOutput += ((Name) n.f1.f0.choice).f0 + " ";
       fieldOutput += n.f2.toString() + ";\n";
       //n.f3.accept(this);
@@ -61,7 +59,6 @@ public class MyVisitor extends DepthFirstVisitor {
       if(accessors.nodes.get(0) instanceof accessor_get_declaration || accessors.nodes.get(0) instanceof accessor_set_declaration) {
          getSet((accessors.nodes.get(0)), n.f2.toString(), ((Name) n.f1.f0.choice).f0.toString(), ((field_modifier) n.f0.nodes.get(0)).f0.choice.toString());
       }
-      Node g = ((NodeOptional)accessors.nodes.get(1)).node;
       if(((NodeOptional)accessors.nodes.get(1)).node != null) {
          Node a = ((NodeOptional)accessors.nodes.get(1)).node;
          if(a instanceof accessor_get_declaration || a instanceof accessor_set_declaration) {
@@ -91,15 +88,6 @@ public class MyVisitor extends DepthFirstVisitor {
          fieldOutput += ";\n";
       }
       output+= fieldOutput;
-   }
-
-   public void visit(accessor_declarations n) {
-      String getter = "";
-      String setter = "";
-
-      n.f0.choice.accept(this);
-      ((NodeSequence) n.f0.choice).nodes.get(1).accept(this);
-
    }
 
    public void writeOutputToFile() throws IOException {
