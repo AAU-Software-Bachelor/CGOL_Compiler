@@ -8,7 +8,7 @@
     <method v="2">
       <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_runsh" />
       <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_rm" />
-      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Touch" />
+      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_touch" />
       <option name="Make" enabled="true" />
     </method>
   </configuration>

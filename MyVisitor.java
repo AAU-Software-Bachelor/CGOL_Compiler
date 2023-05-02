@@ -12,7 +12,6 @@ import java.util.Vector;
 
 public class MyVisitor extends DepthFirstVisitor {
    private String output;
-   private String classBodyOutput = "";
    private String fileName;
 
    public MyVisitor() {
@@ -50,41 +49,57 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(FieldDeclaration n) {
-      classBodyOutput = "";
-      classBodyOutput += ((field_modifier) n.f0.nodes.get(0)).f0.choice + " ";
-      classBodyOutput += ((Name) n.f1.f0.choice).f0 + " ";
-      classBodyOutput += n.f2.toString() + ";\n";
-      n.f3.accept(this);
-      output += classBodyOutput;
+      String fieldOutput = "";
+      fieldOutput = "";
+      fieldOutput += ((field_modifier) n.f0.nodes.get(0)).f0.choice + " ";
+      fieldOutput += ((Name) n.f1.f0.choice).f0 + " ";
+      fieldOutput += n.f2.toString() + ";\n";
+      //n.f3.accept(this);
+
+      NodeSequence accessors = ((NodeSequence)((accessor_declarations)((NodeSequence)n.f3.f0.choice).nodes.get(1)).f0.choice);
+
+      if(accessors.nodes.get(0) instanceof accessor_get_declaration || accessors.nodes.get(0) instanceof accessor_set_declaration) {
+         getSet((accessors.nodes.get(0)), n.f2.toString(), ((Name) n.f1.f0.choice).f0.toString(), ((field_modifier) n.f0.nodes.get(0)).f0.choice.toString());
+      }
+      Node g = ((NodeOptional)accessors.nodes.get(1)).node;
+      if(((NodeOptional)accessors.nodes.get(1)).node != null) {
+         Node a = ((NodeOptional)accessors.nodes.get(1)).node;
+         if(a instanceof accessor_get_declaration || a instanceof accessor_set_declaration) {
+            getSet(a, n.f2.toString(), ((Name) n.f1.f0.choice).f0.toString(), ((field_modifier) n.f0.nodes.get(0)).f0.choice.toString());
+         }
+      }
+
+      output += fieldOutput;
+   }
+
+   private void getSet(Node n, String name, String type, String modifier) {
+      if(n instanceof accessor_get_declaration) {
+         output += modifier +  " " + type  + " get" + capitalizeFirstLetter(name) + "() { return " + name + "; }\n";
+      } else {
+         output += modifier + " void set" + capitalizeFirstLetter(name) + "(" + type + " input) { " + name + " = input; }\n";
+      }
+
    }
 
    public void visit(field_body n) {
+      String fieldOutput = "";
       if (n.f0.which == 0 || n.f0.which == 1) {
          NodeSequence seq = (NodeSequence) n.f0.choice;
          accessor_declarations accDeclarations = (accessor_declarations) seq.elementAt(1);
          accDeclarations.accept(this);
       } else {
-         classBodyOutput += ";\n";
+         fieldOutput += ";\n";
       }
+      output+= fieldOutput;
    }
 
    public void visit(accessor_declarations n) {
       String getter = "";
       String setter = "";
 
-      NodeChoice choice = n.f0;
-      switch (choice.which) {
-         case 0:
-            accessor_get_declaration getDecl = (accessor_get_declaration) ((NodeSequence) choice.choice).elementAt(0);
-            getter = "public " + classBodyOutput.trim().split(" ")[1] + " get" + capitalizeFirstLetter(getDecl.f1.toString()) + "() { return " + getDecl.f1.toString() + "; }\n";
-            break;
-         case 1:
-            accessor_set_declaration setDecl = (accessor_set_declaration) ((NodeSequence) choice.choice).elementAt(0);
-            setter = "public void set" + capitalizeFirstLetter(setDecl.f1.toString()) + "(" + classBodyOutput.trim().split(" ")[1] + " value) { this." + setDecl.f1.toString() + " = value; }\n";
-            break;
-      }
+      n.f0.choice.accept(this);
+      ((NodeSequence) n.f0.choice).nodes.get(1).accept(this);
 
-      classBodyOutput += "{\n" + getter + setter + "}\n";
    }
 
    public void writeOutputToFile() throws IOException {
