@@ -5,6 +5,7 @@
 
 import syntaxtree.*;
 import visitor.DepthFirstVisitor;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -52,10 +53,14 @@ public class MyVisitor extends DepthFirstVisitor {
       String fieldOutput = ((field_modifier) n.f0.nodes.get(0)).f0.choice + " ";
       fieldOutput += ((Name) n.f1.f0.choice).f0 + " ";
       fieldOutput += n.f2.toString() + ";\n";
-      //n.f3.accept(this);
+
 
       NodeSequence accessors = ((NodeSequence)((accessor_declarations)((NodeSequence)n.f3.f0.choice).nodes.get(1)).f0.choice);
 
+      n.f3.accept(this, accessors);
+
+      /*
+      output += fieldOutput;
       if(accessors.nodes.get(0) instanceof accessor_get_declaration || accessors.nodes.get(0) instanceof accessor_set_declaration) {
          getSet((accessors.nodes.get(0)), n.f2.toString(), ((Name) n.f1.f0.choice).f0.toString(), ((field_modifier) n.f0.nodes.get(0)).f0.choice.toString());
       }
@@ -66,7 +71,7 @@ public class MyVisitor extends DepthFirstVisitor {
          }
       }
 
-      output += fieldOutput;
+       */
    }
 
    private void getSet(Node n, String name, String type, String modifier) {
@@ -75,6 +80,10 @@ public class MyVisitor extends DepthFirstVisitor {
       } else {
          output += modifier + " void set" + capitalizeFirstLetter(name) + "(" + type + " input) { " + name + " = input; }\n";
       }
+
+   }
+
+   public void visit() {
 
    }
 
