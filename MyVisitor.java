@@ -15,6 +15,20 @@ public class MyVisitor extends DepthFirstVisitor {
    private String output;
    private String fileName;
 
+   private FieldDecoration currentField = null;
+
+   private static class FieldDecoration {
+      public String name;
+      public String type;
+      public String defaultAccess;
+      public FieldDecoration(String name, String type, String defaultAccess) {
+         this.name = name;
+         this.type = type;
+         this.defaultAccess = defaultAccess;
+      }
+   }
+
+
    public MyVisitor() {
       output = "";
    }
@@ -50,53 +64,56 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(FieldDeclaration n) {
-      String fieldOutput = ((field_modifier) n.f0.nodes.get(0)).f0.choice + " ";
-      fieldOutput += ((Name) n.f1.f0.choice).f0 + " ";
-      fieldOutput += n.f2.toString() + ";\n";
+      String fieldOutput;
+      String access = ((field_modifier) n.f0.nodes.get(0)).f0.choice + " ";
+      fieldOutput = access;
 
+      String type = ((Name) n.f1.f0.choice).f0.toString();
+      fieldOutput += type + " ";
 
-      NodeSequence accessors = ((NodeSequence)((accessor_declarations)((NodeSequence)n.f3.f0.choice).nodes.get(1)).f0.choice);
+      String name = n.f2.toString();
+      fieldOutput += name + ";\n";
 
-      n.f3.accept(this, accessors);
-
-      /*
       output += fieldOutput;
-      if(accessors.nodes.get(0) instanceof accessor_get_declaration || accessors.nodes.get(0) instanceof accessor_set_declaration) {
-         getSet((accessors.nodes.get(0)), n.f2.toString(), ((Name) n.f1.f0.choice).f0.toString(), ((field_modifier) n.f0.nodes.get(0)).f0.choice.toString());
-      }
-      if(((NodeOptional)accessors.nodes.get(1)).node != null) {
-         Node a = ((NodeOptional)accessors.nodes.get(1)).node;
-         if(a instanceof accessor_get_declaration || a instanceof accessor_set_declaration) {
-            getSet(a, n.f2.toString(), ((Name) n.f1.f0.choice).f0.toString(), ((field_modifier) n.f0.nodes.get(0)).f0.choice.toString());
+
+      currentField = new FieldDecoration(name, type, access);
+      n.f3.accept(this);
+   }
+
+   public void visit(accessor_declarations n) {
+      if(currentField == null) throw new Error("CurrentField Empty");
+      Vector<Node> nodes = ((NodeSequence)n.f0.choice).nodes;
+      for (Node node: nodes) {
+         if(node instanceof NodeOptional && ((NodeOptional)node).node != null) {
+            ((NodeOptional)node).node.accept(this);
+         } else {
+            node.accept(this);
          }
       }
-
-       */
+      currentField = null;
    }
-
-   private void getSet(Node n, String name, String type, String modifier) {
-      if(n instanceof accessor_get_declaration) {
-         output += modifier +  " " + type  + " get" + capitalizeFirstLetter(name) + "() { return " + name + "; }\n";
-      } else {
-         output += modifier + " void set" + capitalizeFirstLetter(name) + "(" + type + " input) { " + name + " = input; }\n";
+   public void visit(accessor_get_declaration n) {
+      String access = currentField.defaultAccess;
+      if(n.f0.node != null) {
+         access = ((NodeChoice)n.f0.node).choice.toString();
       }
-
+      output += access +  " " + currentField.type  + " get" + capitalizeFirstLetter(currentField.name) + "() { return " + currentField.name + "; }\n";
    }
 
-   public void visit() {
-
+   public void visit(accessor_set_declaration n) {
+      String access = currentField.defaultAccess;
+      if(n.f0.node != null) {
+         access = ((NodeChoice)n.f0.node).choice.toString();
+      }
+      output += access + " void set" + capitalizeFirstLetter(currentField.name) + "(" + currentField.type + " input) { " + currentField.name + " = input; }\n";
    }
 
    public void visit(field_body n) {
-      String fieldOutput = "";
       if (n.f0.which == 0 || n.f0.which == 1) {
          NodeSequence seq = (NodeSequence) n.f0.choice;
          accessor_declarations accDeclarations = (accessor_declarations) seq.elementAt(1);
          accDeclarations.accept(this);
-      } else {
-         fieldOutput += ";\n";
       }
-      output+= fieldOutput;
    }
 
    public void writeOutputToFile() throws IOException {

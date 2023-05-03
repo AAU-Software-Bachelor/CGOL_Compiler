@@ -1,4 +1,5 @@
 public class DomCard {
+    private String noName;
     private String nama { get; }
     private String name { get; public set; }
     public String email { get; private set; }
