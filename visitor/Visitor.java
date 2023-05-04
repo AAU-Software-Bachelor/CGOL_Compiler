@@ -45,13 +45,13 @@ public interface Visitor {
     * f3 -> [ "extends" Name() ]
     * f4 -> [ "implements" NameList() ]
     * f5 -> "{"
-    * f6 -> ( ClassBodyDeclaration() )*
+    * f6 -> ClassBodyDeclaration()
     * f7 -> "}"
     */
    public void visit(ClassDeclaration n);
 
    /**
-    * f0 -> FieldDeclaration()
+    * f0 -> ( FieldDeclaration() )*
     */
    public void visit(ClassBodyDeclaration n);
 
@@ -74,7 +74,9 @@ public interface Visitor {
    public void visit(field_modifier n);
 
    /**
-    * f0 -> ( "=" Expression() ( "{" accessor_declarations() "}" | ";" ) | "{" accessor_declarations() "}" | ";" )
+    * f0 -> "=" Expression() ( "{" accessor_declarations() "}" | ";" )
+    *       | "{" accessor_declarations() "}"
+    *       | ";"
     */
    public void visit(field_body n);
 

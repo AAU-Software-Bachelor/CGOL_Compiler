@@ -89,7 +89,7 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
     * f3 -> [ "extends" Name() ]
     * f4 -> [ "implements" NameList() ]
     * f5 -> "{"
-    * f6 -> ( ClassBodyDeclaration() )*
+    * f6 -> ClassBodyDeclaration()
     * f7 -> "}"
     */
    public R visit(ClassDeclaration n) {
@@ -106,7 +106,7 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    }
 
    /**
-    * f0 -> FieldDeclaration()
+    * f0 -> ( FieldDeclaration() )*
     */
    public R visit(ClassBodyDeclaration n) {
       R _ret=null;
@@ -144,7 +144,9 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    }
 
    /**
-    * f0 -> ( "=" Expression() ( "{" accessor_declarations() "}" | ";" ) | "{" accessor_declarations() "}" | ";" )
+    * f0 -> "=" Expression() ( "{" accessor_declarations() "}" | ";" )
+    *       | "{" accessor_declarations() "}"
+    *       | ";"
     */
    public R visit(field_body n) {
       R _ret=null;

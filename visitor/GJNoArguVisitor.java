@@ -45,13 +45,13 @@ public interface GJNoArguVisitor<R> {
     * f3 -> [ "extends" Name() ]
     * f4 -> [ "implements" NameList() ]
     * f5 -> "{"
-    * f6 -> ( ClassBodyDeclaration() )*
+    * f6 -> ClassBodyDeclaration()
     * f7 -> "}"
     */
    public R visit(ClassDeclaration n);
 
    /**
-    * f0 -> FieldDeclaration()
+    * f0 -> ( FieldDeclaration() )*
     */
    public R visit(ClassBodyDeclaration n);
 
@@ -74,7 +74,9 @@ public interface GJNoArguVisitor<R> {
    public R visit(field_modifier n);
 
    /**
-    * f0 -> ( "=" Expression() ( "{" accessor_declarations() "}" | ";" ) | "{" accessor_declarations() "}" | ";" )
+    * f0 -> "=" Expression() ( "{" accessor_declarations() "}" | ";" )
+    *       | "{" accessor_declarations() "}"
+    *       | ";"
     */
    public R visit(field_body n);
 
