@@ -61,10 +61,14 @@ public class MyVisitor extends DepthFirstVisitor {
    }
    
    public void visit(ClassBodyDeclaration n) {
-      Vector<Node> nodes = n.f0.nodes;
+      //FieldDeclaration works not other
+      n.f0.choice.accept(this);
+
+
+      /*Vector<Node> nodes = n.f0.nodes;
       for (Object field : nodes) {
          ((FieldDeclaration)field).accept(this);
-      }
+      }*/
    }
 
    public void visit(FieldDeclaration n) {

@@ -6,12 +6,13 @@ package syntaxtree;
 
 /**
  * Grammar production:
-Assignment()
+ * f0 -> Assignment()
+ *       | ConditionalExpression()
  */
 public class Expression implements Node {
-   public Assignment f0;
+   public NodeChoice f0;
 
-   public Expression(Assignment n0) {
+   public Expression(NodeChoice n0) {
       f0 = n0;
    }
 

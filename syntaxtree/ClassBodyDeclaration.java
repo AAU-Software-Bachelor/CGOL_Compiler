@@ -6,12 +6,15 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> ( FieldDeclaration() )*
+ * f0 -> StaticInitializer()
+ *       | ConstructorDeclaration()
+ *       | MethodDeclaration()
+ *       | ( FieldDeclaration() )*
  */
 public class ClassBodyDeclaration implements Node {
-   public NodeListOptional f0;
+   public NodeChoice f0;
 
-   public ClassBodyDeclaration(NodeListOptional n0) {
+   public ClassBodyDeclaration(NodeChoice n0) {
       f0 = n0;
    }
 

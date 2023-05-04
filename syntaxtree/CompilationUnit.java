@@ -6,21 +6,29 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> ( TypeDeclaration() )*
- * f1 -> <EOF>
+ * f0 -> [ PackageDeclaration() ]
+ * f1 -> ( ImportDeclaration() )*
+ * f2 -> ( TypeDeclaration() )*
+ * f3 -> <EOF>
  */
 public class CompilationUnit implements Node {
-   public NodeListOptional f0;
-   public NodeToken f1;
+   public NodeOptional f0;
+   public NodeListOptional f1;
+   public NodeListOptional f2;
+   public NodeToken f3;
 
-   public CompilationUnit(NodeListOptional n0, NodeToken n1) {
+   public CompilationUnit(NodeOptional n0, NodeListOptional n1, NodeListOptional n2, NodeToken n3) {
       f0 = n0;
       f1 = n1;
+      f2 = n2;
+      f3 = n3;
    }
 
-   public CompilationUnit(NodeListOptional n0) {
+   public CompilationUnit(NodeOptional n0, NodeListOptional n1, NodeListOptional n2) {
       f0 = n0;
-      f1 = new NodeToken("");
+      f1 = n1;
+      f2 = n2;
+      f3 = new NodeToken("");
    }
 
    public void accept(visitor.Visitor v) {

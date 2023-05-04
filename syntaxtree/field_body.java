@@ -6,9 +6,7 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> "=" Expression() ( "{" accessor_declarations() "}" | ";" )
- *       | "{" accessor_declarations() "}"
- *       | ";"
+ * f0 -> ( "=" Expression() ( "{" accessor_declarations() "}" | ";" ) | "{" accessor_declarations() "}" | ";" )
  */
 public class field_body implements Node {
    public NodeChoice f0;

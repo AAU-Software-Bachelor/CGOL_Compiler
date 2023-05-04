@@ -7,6 +7,7 @@ package syntaxtree;
 /**
  * Grammar production:
  * f0 -> ClassDeclaration()
+ *       | InterfaceDeclaration()
  *       | ";"
  */
 public class TypeDeclaration implements Node {
