@@ -37,6 +37,10 @@ public class MyVisitor extends DepthFirstVisitor {
       return input.substring(0, 1).toUpperCase() + input.substring(1);
    }
 
+   public void visit(PrimitiveType n) {
+      output += n.f0.choice.toString() + " ";
+   }
+
    public void visit(ClassDeclaration n) {
       fileName = n.f2.toString() + ".java";
 
@@ -64,12 +68,14 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(FieldDeclaration n) {
-      String fieldOutput;
+      String fieldOutput = "";
+
+      n.f0.nodes.get(0).accept(this);
       String access = ((field_modifier) n.f0.nodes.get(0)).f0.choice + " ";
-      fieldOutput = access;
+
+      n.f1.f0.choice.accept(this);
 
       String type = ((Name) n.f1.f0.choice).f0.toString();
-      fieldOutput += type + " ";
 
       String name = n.f2.toString();
       fieldOutput += name + ";\n";
@@ -78,6 +84,14 @@ public class MyVisitor extends DepthFirstVisitor {
 
       currentField = new FieldDecoration(name, type, access);
       n.f3.accept(this);
+   }
+
+   public void visit(Name n) {
+      output += n.f0.toString() + " ";
+   }
+
+   public void visit(field_modifier n) {
+      output += n.f0.choice + " ";
    }
 
    public void visit(accessor_declarations n) {
