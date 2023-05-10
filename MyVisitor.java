@@ -77,9 +77,17 @@ public class MyVisitor extends DepthFirstVisitor {
       n.f0.nodes.get(0).accept(this);
       String access = ((field_modifier) n.f0.nodes.get(0)).f0.choice + " ";
 
-      n.f1.f0.choice.accept(this);
 
-      String type = ((Name) n.f1.f0.choice).f0.toString();
+      Node choice = n.f1.f0.choice; // get the node choice
+      String type;
+      if (choice instanceof PrimitiveType) {
+          type = ((PrimitiveType) choice).f0.choice.toString();
+      } else if (choice instanceof Name) {
+          type = ((Name) choice).f0.toString();
+      } else {
+          throw new Error("Unexpected node type for field type: " + choice.getClass());
+      }
+
 
       String name = n.f2.toString();
       fieldOutput += name + ";\n";
