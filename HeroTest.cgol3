@@ -1,0 +1,13 @@
+public class Hero {
+    private String name { get; public set; }
+    private int power { get; public set; }
+    private int toughness { get; public set; }
+
+    public Hero(String name, int power, int toughness) {
+        this.name = name;
+        this.power = power;
+        this.toughness = toughness;
+    }
+    
+    
+}

@@ -1,8 +1,15 @@
 public class DomCard {
     private String noName;
     private String nama { get; }
-    private String name { get; public set; }
+    public String name { get; public set; }
     public String email { get; private set; }
-    private String name2 { public get; set; }
+    public String name2 { public get; set; }
     public String email2 { private get; set; }
+
+
+    public DomCard(String name, int power, int toughness) {
+        this.name = name;
+        this.power = power;
+        this.toughness = toughness;
+    }
 }
