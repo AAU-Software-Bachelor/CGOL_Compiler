@@ -6,16 +6,16 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> InstanceOfExpression()
+ * f1 -> ( ( "==" | "!=" ) InstanceOfExpression() )*
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class EqualityExpression implements Node {
+   public InstanceOfExpression f0;
+   public NodeListOptional f1;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public EqualityExpression(InstanceOfExpression n0, NodeListOptional n1) {
       f0 = n0;
+      f1 = n1;
    }
 
    public void accept(visitor.Visitor v) {

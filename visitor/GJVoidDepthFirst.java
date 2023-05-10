@@ -122,7 +122,7 @@ public class GJVoidDepthFirst<A> implements GJVoidVisitor<A> {
     * f0 -> StaticInitializer()
     *       | ConstructorDeclaration()
     *       | MethodDeclaration()
-    *       | ( FieldDeclaration() )*
+    *       | FieldDeclaration()
     */
    public void visit(ClassBodyDeclaration n, A argu) {
       n.f0.accept(this, argu);

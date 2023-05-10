@@ -6,16 +6,25 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> "throw"
+ * f1 -> Expression()
+ * f2 -> ";"
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class ThrowStatement implements Node {
+   public NodeToken f0;
+   public Expression f1;
+   public NodeToken f2;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public ThrowStatement(NodeToken n0, Expression n1, NodeToken n2) {
       f0 = n0;
+      f1 = n1;
+      f2 = n2;
+   }
+
+   public ThrowStatement(Expression n0) {
+      f0 = new NodeToken("throw");
+      f1 = n0;
+      f2 = new NodeToken(";");
    }
 
    public void accept(visitor.Visitor v) {

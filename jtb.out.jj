@@ -420,8 +420,7 @@ ClassBodyDeclaration ClassBodyDeclaration() :
    StaticInitializer n1;
    ConstructorDeclaration n2;
    MethodDeclaration n3;
-   NodeListOptional n4 = new NodeListOptional();
-   FieldDeclaration n5;
+   FieldDeclaration n4;
 
    printDebugInfo("ClassBodyDeclaration");
 }
@@ -439,11 +438,7 @@ ClassBodyDeclaration ClassBodyDeclaration() :
       n3=MethodDeclaration()
       { n0 = new NodeChoice(n3, 2); }
    |
-      (
-         n5=FieldDeclaration()
-         { n4.addNode(n5); }
-      )*
-      { n4.nodes.trimToSize(); }
+      n4=FieldDeclaration()
       { n0 = new NodeChoice(n4, 3); }
    )
    

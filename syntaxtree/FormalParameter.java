@@ -6,16 +6,16 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> Type()
+ * f1 -> VariableDeclaratorId()
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class FormalParameter implements Node {
+   public Type f0;
+   public VariableDeclaratorId f1;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public FormalParameter(Type n0, VariableDeclaratorId n1) {
       f0 = n0;
+      f1 = n1;
    }
 
    public void accept(visitor.Visitor v) {

@@ -142,7 +142,7 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
     * f0 -> StaticInitializer()
     *       | ConstructorDeclaration()
     *       | MethodDeclaration()
-    *       | ( FieldDeclaration() )*
+    *       | FieldDeclaration()
     */
    public R visit(ClassBodyDeclaration n) {
       R _ret=null;

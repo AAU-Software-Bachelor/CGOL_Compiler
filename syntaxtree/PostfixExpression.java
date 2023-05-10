@@ -6,16 +6,16 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> PrimaryExpression()
+ * f1 -> [ "++" | "--" ]
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class PostfixExpression implements Node {
+   public PrimaryExpression f0;
+   public NodeOptional f1;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public PostfixExpression(PrimaryExpression n0, NodeOptional n1) {
       f0 = n0;
+      f1 = n1;
    }
 
    public void accept(visitor.Visitor v) {

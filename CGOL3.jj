@@ -369,7 +369,7 @@ import java.io.IOException;
       LOOKAHEAD( MethodDeclarationLookahead() )
       MethodDeclaration()
     |
-      (FieldDeclaration())*
+      FieldDeclaration()
     }
 
     // This production is to determine lookahead only.

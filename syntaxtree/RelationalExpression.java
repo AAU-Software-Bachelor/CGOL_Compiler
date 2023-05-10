@@ -6,16 +6,16 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> ShiftExpression()
+ * f1 -> ( ( "<" | ">" | "<=" | ">=" ) ShiftExpression() )*
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class RelationalExpression implements Node {
+   public ShiftExpression f0;
+   public NodeListOptional f1;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public RelationalExpression(ShiftExpression n0, NodeListOptional n1) {
       f0 = n0;
+      f1 = n1;
    }
 
    public void accept(visitor.Visitor v) {

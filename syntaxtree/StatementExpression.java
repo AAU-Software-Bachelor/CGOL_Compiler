@@ -6,15 +6,15 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> PreIncrementExpression()
+ *       | PreDecrementExpression()
+ *       | Assignment()
+ *       | PostfixExpression()
  */
-public class ClassBodyDeclaration implements Node {
+public class StatementExpression implements Node {
    public NodeChoice f0;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public StatementExpression(NodeChoice n0) {
       f0 = n0;
    }
 

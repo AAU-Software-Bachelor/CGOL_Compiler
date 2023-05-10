@@ -6,15 +6,14 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> "(" PrimitiveType()
+ *       | "(" Name() "[" "]"
+ *       | "(" Name() ")" ( "~" | "!" | "(" | <IDENTIFIER> | "this" | "super" | "new" | Literal() )
  */
-public class ClassBodyDeclaration implements Node {
+public class CastLookahead implements Node {
    public NodeChoice f0;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public CastLookahead(NodeChoice n0) {
       f0 = n0;
    }
 

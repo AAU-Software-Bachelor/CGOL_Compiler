@@ -6,16 +6,16 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> EqualityExpression()
+ * f1 -> ( "&" EqualityExpression() )*
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class AndExpression implements Node {
+   public EqualityExpression f0;
+   public NodeListOptional f1;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public AndExpression(EqualityExpression n0, NodeListOptional n1) {
       f0 = n0;
+      f1 = n1;
    }
 
    public void accept(visitor.Visitor v) {

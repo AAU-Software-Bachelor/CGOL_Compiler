@@ -72,7 +72,7 @@ public interface Visitor {
     * f0 -> StaticInitializer()
     *       | ConstructorDeclaration()
     *       | MethodDeclaration()
-    *       | ( FieldDeclaration() )*
+    *       | FieldDeclaration()
     */
    public void visit(ClassBodyDeclaration n);
 

@@ -6,15 +6,13 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> "(" PrimitiveType() ( "[" "]" )* ")" UnaryExpression()
+ *       | "(" Name() ( "[" "]" )* ")" UnaryExpressionNotPlusMinus()
  */
-public class ClassBodyDeclaration implements Node {
+public class CastExpression implements Node {
    public NodeChoice f0;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public CastExpression(NodeChoice n0) {
       f0 = n0;
    }
 

@@ -6,15 +6,12 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> StatementExpressionList()
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class ForUpdate implements Node {
+   public StatementExpressionList f0;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public ForUpdate(StatementExpressionList n0) {
       f0 = n0;
    }
 

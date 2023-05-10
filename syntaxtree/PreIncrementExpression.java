@@ -6,16 +6,21 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> "++"
+ * f1 -> PrimaryExpression()
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class PreIncrementExpression implements Node {
+   public NodeToken f0;
+   public PrimaryExpression f1;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public PreIncrementExpression(NodeToken n0, PrimaryExpression n1) {
       f0 = n0;
+      f1 = n1;
+   }
+
+   public PreIncrementExpression(PrimaryExpression n0) {
+      f0 = new NodeToken("++");
+      f1 = n0;
    }
 
    public void accept(visitor.Visitor v) {

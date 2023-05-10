@@ -6,16 +6,25 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> "package"
+ * f1 -> Name()
+ * f2 -> ";"
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class PackageDeclaration implements Node {
+   public NodeToken f0;
+   public Name f1;
+   public NodeToken f2;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public PackageDeclaration(NodeToken n0, Name n1, NodeToken n2) {
       f0 = n0;
+      f1 = n1;
+      f2 = n2;
+   }
+
+   public PackageDeclaration(Name n0) {
+      f0 = new NodeToken("package");
+      f1 = n0;
+      f2 = new NodeToken(";");
    }
 
    public void accept(visitor.Visitor v) {

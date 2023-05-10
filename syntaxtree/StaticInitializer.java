@@ -6,16 +6,21 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> "static"
+ * f1 -> Block()
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class StaticInitializer implements Node {
+   public NodeToken f0;
+   public Block f1;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public StaticInitializer(NodeToken n0, Block n1) {
       f0 = n0;
+      f1 = n1;
+   }
+
+   public StaticInitializer(Block n0) {
+      f0 = new NodeToken("static");
+      f1 = n0;
    }
 
    public void accept(visitor.Visitor v) {

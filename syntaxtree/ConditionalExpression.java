@@ -6,16 +6,16 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> ConditionalOrExpression()
+ * f1 -> [ "?" Expression() ":" ConditionalExpression() ]
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class ConditionalExpression implements Node {
+   public ConditionalOrExpression f0;
+   public NodeOptional f1;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public ConditionalExpression(ConditionalOrExpression n0, NodeOptional n1) {
       f0 = n0;
+      f1 = n1;
    }
 
    public void accept(visitor.Visitor v) {

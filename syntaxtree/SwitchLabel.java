@@ -6,15 +6,13 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> "case" Expression() ":"
+ *       | "default" ":"
  */
-public class ClassBodyDeclaration implements Node {
+public class SwitchLabel implements Node {
    public NodeChoice f0;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public SwitchLabel(NodeChoice n0) {
       f0 = n0;
    }
 

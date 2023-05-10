@@ -6,16 +6,25 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> StaticInitializer()
- *       | ConstructorDeclaration()
- *       | MethodDeclaration()
- *       | FieldDeclaration()
+ * f0 -> <IDENTIFIER>
+ * f1 -> ":"
+ * f2 -> Statement()
  */
-public class ClassBodyDeclaration implements Node {
-   public NodeChoice f0;
+public class LabeledStatement implements Node {
+   public NodeToken f0;
+   public NodeToken f1;
+   public Statement f2;
 
-   public ClassBodyDeclaration(NodeChoice n0) {
+   public LabeledStatement(NodeToken n0, NodeToken n1, Statement n2) {
       f0 = n0;
+      f1 = n1;
+      f2 = n2;
+   }
+
+   public LabeledStatement(NodeToken n0, Statement n1) {
+      f0 = n0;
+      f1 = new NodeToken(":");
+      f2 = n1;
    }
 
    public void accept(visitor.Visitor v) {
