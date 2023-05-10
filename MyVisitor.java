@@ -82,15 +82,21 @@ public class MyVisitor extends DepthFirstVisitor {
       String type;
       if (choice instanceof PrimitiveType) {
           type = ((PrimitiveType) choice).f0.choice.toString();
+          fieldOutput += (type + " ");
       } else if (choice instanceof Name) {
           type = ((Name) choice).f0.toString();
+          fieldOutput += (type + " ");
       } else {
           throw new Error("Unexpected node type for field type: " + choice.getClass());
       }
 
-
-      String name = n.f2.toString();
-      fieldOutput += name + ";\n";
+      if(n.f3.node != null) {
+         n.f3.node.accept(this);
+     }else {
+         String name = n.f2.toString();
+         fieldOutput += name + ";\n";
+      }
+      
 
       output += fieldOutput;
 
@@ -106,6 +112,10 @@ public class MyVisitor extends DepthFirstVisitor {
       output += n.f0.choice + " ";
    }
 
+   public void visit(VariableInitializer n) {
+      output += " = " + n.f0.choice.toString();
+  }
+  
    public void visit(accessor_declarations n) {
       if(currentField == null) throw new Error("CurrentField Empty");
       Vector<Node> nodes = ((NodeSequence)n.f0.choice).nodes;
@@ -135,12 +145,18 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(field_body n) {
-      if (n.f0.which == 0 || n.f0.which == 1) {
-         NodeSequence seq = (NodeSequence) n.f0.choice;
-         accessor_declarations accDeclarations = (accessor_declarations) seq.elementAt(1);
-         accDeclarations.accept(this);
+      if (n.f0.which == 0 || n.f0.which == 1) { // this condition might need to be updated according to your grammar
+          NodeSequence seq = (NodeSequence) n.f0.choice;
+          Node node = seq.elementAt(1);
+          if (node instanceof accessor_declarations) {
+              accessor_declarations accDeclarations = (accessor_declarations) node;
+              accDeclarations.accept(this);
+          } else if (node instanceof Expression) {
+              Expression expr = (Expression) node;
+              expr.accept(this);
+          }
       }
-   }
+  }
 
    public void writeOutputToFile() throws IOException {
       Files.write(Paths.get("outputs/" + fileName), output.getBytes());

@@ -1,8 +1,9 @@
 public class DomCard {
-    private String noName;
+    private String noName = "notaname";
     private String nama { get; }
     private String name { get; public set; }
     public boolean email { get; private set; }
     private String name2 { public get; set; }
     public String email2 { private get; set; }
+
 }
