@@ -48,7 +48,7 @@ public class JavaParser implements JavaParserConstants {
          Node root = parser.CompilationUnit();
          MyVisitor v = new MyVisitor();
          root.accept(v);
-         v.writeOutputToFile();
+         v.writeToFile(helpers.autoTab(MyVisitor.output));
          System.out.println("Java Parser Version 1.0.2:  Java program parsed successfully.");
       }
       catch (ParseException e)

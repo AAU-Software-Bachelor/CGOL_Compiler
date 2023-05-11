@@ -9,13 +9,17 @@ import visitor.DepthFirstVisitor;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Vector;
 
 public class MyVisitor extends DepthFirstVisitor {
-   private String output;
+   public static String output;
    private String fileName;
 
    private FieldDecoration currentField = null;
+   //String[] spaces = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"};
+   String[] spaces = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
+   private boolean unary = false;
 
    private static class FieldDecoration {
       public String name;
@@ -26,6 +30,28 @@ public class MyVisitor extends DepthFirstVisitor {
          this.type = type;
          this.defaultAccess = defaultAccess;
       }
+
+      public FieldDecoration() {}
+   }
+
+   public void visit(Block n) {
+      output += " {\n";
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      output += "}\n";
+   }
+
+   public void visit(ReturnStatement n) {
+      n.f0.accept(this);
+      output += " ";
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   public void visit(BlockStatement n) {
+      n.f0.accept(this);
+      if(!output.endsWith("\n")) output += ";\n";
    }
 
 
@@ -38,68 +64,226 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(PrimitiveType n) {
-      output += n.f0.choice.toString() + " ";
+      output += n.f0.choice.toString();
+   }
+
+   public void visit(TypeDeclaration n) {
+      n.f0.choice.accept(this);
+   }
+
+   public void visit(InterfaceDeclaration n) {
+      n.f0.accept(this);
+   }
+
+   public void visit(NodeOptional n) {
+      if(n.node != null) {
+         n.node.accept(this);
+      }
+   }
+
+   public void visit(NodeListOptional n) {
+      for (Node node: n.nodes) {
+         node.accept(this);
+      }
+   }
+
+   public void visit(PackageDeclaration n) {
+
    }
 
    public void visit(ClassDeclaration n) {
       fileName = n.f2.toString() + ".java";
 
-      output += "package outputs;\n\n";
-      output += ((NodeChoice) n.f0.nodes.get(0)).choice.toString() + " ";
-      output += n.f1.toString() + " ";
-      output += n.f2.toString() + " ";
-      output += n.f5.toString() + "\n";
-
+      output = "package outputs;\n\n" + output;
+      n.f0.accept(this);
+      if(n.f0.present()) output += " ";
+      n.f1.accept(this);
+      output += " ";
+      n.f2.accept(this);
+      output += " ";
+      n.f3.accept(this);
+      if(n.f3.present()) output += " ";
+      n.f4.accept(this);
+      if(n.f4.present()) output += " ";
+      output += "{\n";
       n.f6.accept(this);
-      output += n.f7.toString();
-
+      output += "\n}\n";
       try {
-         writeOutputToFile();
+         writeToFile(helpers.autoTab(output));
       } catch (IOException e) {
          e.printStackTrace();
       }
    }
+
+   public void visit(ImportDeclaration n) {
+      n.f0.accept(this);
+      output += " ";
+      n.f1.accept(this);
+      n.f3.accept(this);
+      output += ";\n";
+   }
    
    public void visit(ClassBodyDeclaration n) {
-      //FieldDeclaration works not other
       n.f0.choice.accept(this);
+   }
+   public void visit(SwitchStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+      output += " {\n";
+      n.f5.accept(this);
+      output += "}\n";
+   }
+
+   public void visit(IfStatement n) {
+      int i = 0;
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+      n.f5.accept(this);
+   }
+
+   public void visit(ForStatement n) {
+      int i = 0;
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+      output += "; ";
+      n.f5.accept(this);
+      n.f6.accept(this);
+      n.f7.accept(this);
+      n.f8.accept(this);
+   }
+
+   public void visit(ForInit n) {
+      int i = 0;
+      n.f0.accept(this);
+      output += "; ";
+   }
 
 
-      /*Vector<Node> nodes = n.f0.nodes;
-      for (Object field : nodes) {
-         ((FieldDeclaration)field).accept(this);
-      }*/
+
+   public void visit(BreakStatement n) {
+      n.f0.accept(this);
+      output += ";\n";
+   }
+
+   public void visit(SwitchLabel n) {
+      n.f0.accept(this);
+      output += "\n";
+   }
+   public void visit(MethodDeclaration n) {
+      n.f0.accept(this);
+      if(!n.f0.nodes.isEmpty()) output += " ";
+      n.f1.accept(this);
+      output += " ";
+      n.f2.accept(this);
+      if(n.f3.present()) output += " ";
+      n.f3.accept(this);
+      if(n.f3.present()) output += " ";
+      n.f4.accept(this);
+   }
+   public void visit(MethodDeclarator n) {
+      int i = 0;
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   public void visit(LocalVariableDeclaration n) {
+      n.f0.accept(this);
+      output += " ";
+      n.f1.accept(this);
+      if(n.f2.present()) output += spaces[18];
+      n.f2.accept(this);
+   }
+
+   public void visit(VariableInitializer n) {
+      output += " ";
+      n.f0.accept(this);
+   }
+
+   public void visit(VariableDeclarator n) {
+      int i = 0;
+      n.f0.accept(this);
+      if(n.f1.present()) output += spaces[17];
+      n.f1.accept(this);
+
+   }
+
+   public void visit(FormalParameters n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   public void visit(FormalParameter n) {
+      n.f0.accept(this);
+      output += " ";
+      n.f1.accept(this);
    }
 
    public void visit(FieldDeclaration n) {
-      String fieldOutput = "";
+      n.f0.accept(this);
+      if(n.f0.present()) output += spaces[16];
+      n.f1.accept(this);
+      output += " ";
+      initCurrentField();
+      currentField.name = n.f2.toString();
 
-      n.f0.nodes.get(0).accept(this);
-      String access = ((field_modifier) n.f0.nodes.get(0)).f0.choice + " ";
+      output += n.f2.toString();
 
-      n.f1.f0.choice.accept(this);
+      if(n.f3.f0.choice instanceof NodeSequence) {
+         String next = ((NodeSequence)n.f3.f0.choice).nodes.get(0).toString();
+         if(!next.equals("{")) {
+            output += spaces[15];
+         }
+      } else if (!n.f3.f0.choice.toString().equals(";")) {
+         output += spaces[14];
+      }
 
-      String type = ((Name) n.f1.f0.choice).f0.toString();
-
-      String name = n.f2.toString();
-      fieldOutput += name + ";\n";
-
-      output += fieldOutput;
-
-      currentField = new FieldDecoration(name, type, access);
       n.f3.accept(this);
+      if(!output.endsWith("}")) {
+         output += ";";
+      }
+      output += "\n";
    }
 
    public void visit(Name n) {
-      output += n.f0.toString() + " ";
+      initCurrentField();
+      currentField.type = n.f0.toString();
+      output += n.f0.toString();
+      n.f1.accept(this);
+   }
+
+   public void visit(Type n) {
+      initCurrentField();
+      if(n.f0.choice instanceof PrimitiveType) {
+         currentField.type = ((PrimitiveType)n.f0.choice).f0.choice.toString();
+      }
+      n.f0.accept(this);
+      n.f1.accept(this);
    }
 
    public void visit(field_modifier n) {
-      output += n.f0.choice + " ";
+      initCurrentField();
+      currentField.defaultAccess = n.f0.choice.toString();
+      output += n.f0.choice;
+   }
+
+   private void initCurrentField() {
+      if(currentField == null) currentField = new FieldDecoration();
    }
 
    public void visit(accessor_declarations n) {
-      if(currentField == null) throw new Error("CurrentField Empty");
+      output += ";\n";
+      checkemptyCurrentField();
       Vector<Node> nodes = ((NodeSequence)n.f0.choice).nodes;
       for (Node node: nodes) {
          if(node instanceof NodeOptional && ((NodeOptional)node).node != null) {
@@ -110,12 +294,28 @@ public class MyVisitor extends DepthFirstVisitor {
       }
       currentField = null;
    }
+
+   private void checkemptyCurrentField() {
+      if(currentField == null) {
+         throw new Error("CurrentField Null");
+      } else if(currentField.name == null) {
+         throw new Error("CurrentField.name Null");
+      } else if(currentField.type == null) {
+         throw new Error("CurrentField.type Null");
+      }
+   }
    public void visit(accessor_get_declaration n) {
       String access = currentField.defaultAccess;
       if(n.f0.node != null) {
          access = ((NodeChoice)n.f0.node).choice.toString();
       }
-      output += access +  " " + currentField.type  + " get" + capitalizeFirstLetter(currentField.name) + "() { return " + currentField.name + "; }\n";
+      output += access +  " " + currentField.type  + " get" + capitalizeFirstLetter(currentField.name) + "() { return this." + currentField.name + "; }";
+   }
+
+   public void visit(NodeSequence n) {
+      for (Node node: n.nodes) {
+         node.accept(this);
+      }
    }
 
    public void visit(accessor_set_declaration n) {
@@ -123,18 +323,134 @@ public class MyVisitor extends DepthFirstVisitor {
       if(n.f0.node != null) {
          access = ((NodeChoice)n.f0.node).choice.toString();
       }
-      output += access + " void set" + capitalizeFirstLetter(currentField.name) + "(" + currentField.type + " input) { " + currentField.name + " = input; }\n";
+      output += access + " void set" + capitalizeFirstLetter(currentField.name) + "(" + currentField.type + " input) { this." + currentField.name + " = input; }";
    }
 
-   public void visit(field_body n) {
-      if (n.f0.which == 0 || n.f0.which == 1) {
-         NodeSequence seq = (NodeSequence) n.f0.choice;
-         accessor_declarations accDeclarations = (accessor_declarations) seq.elementAt(1);
-         accDeclarations.accept(this);
+   public void visit(NodeChoice n) {
+      n.choice.accept(this);
+   }
+
+   public void visit(Literal n) {
+      if(!output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[13];
+      n.f0.accept(this);
+   }
+
+   public void visit(NodeToken n) {
+      String nString = n.toString();
+
+      if(nString.equals("-") && !output.endsWith(" ")) {
+         unary = true;
+      }
+      if(nString.equals("+") && !output.endsWith(" ")) {
+         output += " " + nString;
+      } else if(nString.equals(",") || nString.equals("throws")) {
+         output += nString + spaces[12];
+      } else if ((!nString.equals("{") && !nString.equals("}") && !nString.equals(";"))) {
+         output += nString;
       }
    }
 
-   public void writeOutputToFile() throws IOException {
-      Files.write(Paths.get("outputs/" + fileName), output.getBytes());
+   public void visit(ConditionalOrExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[11];
+      n.f1.accept(this);
    }
+
+   public void visit(ConditionalExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[10];
+      n.f1.accept(this);
+   }
+
+   public void visit(ConditionalAndExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[9];
+      n.f1.accept(this);
+   }
+
+   public void visit(InclusiveOrExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[8];
+      n.f1.accept(this);
+   }
+   public void visit(ExclusiveOrExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[7];
+      n.f1.accept(this);
+   }
+   public void visit(AndExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[6];
+      n.f1.accept(this);
+   }
+   public void visit(EqualityExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[5];
+      n.f1.accept(this);
+   }
+   public void visit(InstanceOfExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[4];
+      n.f1.accept(this);
+   }
+   public void visit(RelationalExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[3];
+      n.f1.accept(this);
+   }
+   public void visit(ShiftExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[2];
+      n.f1.accept(this);
+   }
+   public void visit(AdditiveExpression n) {
+
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[1];
+      n.f1.accept(this);
+   }
+   public void visit(MultiplicativeExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[0];
+      n.f1.accept(this);
+   }
+   public void visit(UnaryExpression n) {
+      System.out.println(output);
+      //if(output.endsWith(" ")) output = output.substring(0, output.length() - 1);
+      System.out.println(output);
+      n.f0.accept(this);
+   }
+
+   public void visit(PrimaryExpression n) {
+      n.f0.accept(this);
+      if(n.f1.present() && !unary && (output.endsWith("+") || output.endsWith("-") || output.endsWith("*") || output.endsWith("/"))) output += spaces[21];
+      n.f1.accept(this);
+   }
+
+   public void visit(PrimaryPrefix n) {
+
+      if(!unary && !output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(") && !output.endsWith("[")) output += spaces[19];
+      unary = false;
+      n.f0.accept(this);
+   }
+
+   public void visit(PrimarySuffix n) {
+      //if(output.endsWith("+") || output.endsWith("-") || output.endsWith("*") || output.endsWith("/")) output += spaces[20];
+      n.f0.choice.accept(this);
+   }
+
+   public void visit(field_body n) {
+      n.f0.choice.accept(this);
+   }
+
+   public void visit(Expression n) {
+      n.f0.choice.accept(this);
+   }
+
+   public void writeToFile(String input) throws IOException {
+      Files.write(Paths.get("outputs/" + fileName), input.getBytes());
+   }
+
+
+
 }

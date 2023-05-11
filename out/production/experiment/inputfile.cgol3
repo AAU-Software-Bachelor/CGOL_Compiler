@@ -1,8 +1,85 @@
 public class DomCard {
-    private String noName;
-    private String nama { get; }
-    private String name { get; public set; }
-    public String email { get; private set; }
-    private String name2 { public get; set; }
-    public String email2 { private get; set; }
+    /*
+    private String name {public get;}
+
+    private int cost {public get;}
+
+
+    private int victoryPoints {public get;}
+    private int treasureValue {public get;}
+    private int buys {public get;}
+    private String effect {public get;}
+    private String art {public get;}
+    private String type {public get;}
+    private int drawammount = 0 {public get;}
+    private int additionalActions = 0 {public get;}
+    private int villagers = 0 {public get;}
+    private int coffers = 0 {public get;}
+
+    public void play(Player activPlayer) {
+        activPlayer.addActions(this.additionalActions);
+        activPlayer.addCoins(this.treasureValue);
+        activPlayer.addCoffers(this.coffers);
+        activPlayer.addVillagers(this.villagers);
+        activPlayer.addBuys(this.buys);
+        for (int i = 0; i < drawammount; i++) {
+            activPlayer.drawFromDeck();
+        }
+    }
+    */
+    public void purchace(Player activPlayer) {
+        activPlayer.setCoins(-cost);
+    }
+
+    public String getPrettyName() {
+        String template = " |                              | ";
+        int start = (template.length() - this.name.length()) / 2;
+        int end = start + this.name.length();
+        return template.substring(0, start) + this.name + template.substring(end);
+    }
+
+
+    public String getPrettyCostType() {
+        String template = " |(" + this.cost + ")                           | ";
+        int start = (template.length() - this.type.length()) / 2;
+        int end = start + this.type.length();
+        return template.substring(0, start) + this.type + template.substring(end);
+    }
+
+
+    public String getEffectLine(int linenum) {
+        String[] lines = this.effect.split("\r?\n");
+        if (lines.length < linenum) {
+            return " |  .                        .  | "; // filler line
+        } else {
+            return lines[linenum - 1];
+        }
+    }
+
+    private String setDefaultArt() {
+        String DefArt = "";
+        DefArt += "\n|  __  |";
+        DefArt += "\n| |                       | |";
+        DefArt += "\n| |           Art         | |";
+        DefArt += "\n| |___| |";
+        return DefArt;
+    }
+
+    public void prettyPrint() {
+        System.out.println("\n ============================== ");
+        System.out.println("|     " + this.name + "   |");
+        System.out.println(this.art);
+        // System.out.println("__");
+        if (this.victoryPoints != 0) {
+            System.out.println("|     " + this.victoryPoints + " VP  |");
+        }
+        if (!this.effect.isEmpty()) {
+            System.out.println(this.effect);
+
+        }
+        System.out.println(" __ ");
+        System.out.println("|            Cost: (" + this.cost + ") |");
+        System.out.println("|    Type: " + this.type + "    |");
+        System.out.println("==============================\n");
+    }
 }

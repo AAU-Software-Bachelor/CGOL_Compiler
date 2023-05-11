@@ -184,14 +184,17 @@ public class DepthFirstVisitor implements Visitor {
    }
 
    /**
-    * f0 -> ( "=" Expression() ( "{" accessor_declarations() "}" | ";" ) | "{" accessor_declarations() "}" | ";" )
+    * f0 -> "=" Expression() ( "{" accessor_declarations() "}" | ";" )
+    *       | "{" accessor_declarations() "}"
+    *       | ";"
     */
    public void visit(field_body n) {
       n.f0.accept(this);
    }
 
    /**
-    * f0 -> ( accessor_get_declaration() ( accessor_set_declaration() )? | accessor_set_declaration() ( accessor_get_declaration() )? )
+    * f0 -> accessor_get_declaration() ( accessor_set_declaration() )?
+    *       | accessor_set_declaration() ( accessor_get_declaration() )?
     */
    public void visit(accessor_declarations n) {
       n.f0.accept(this);

@@ -120,12 +120,15 @@ public interface GJNoArguVisitor<R> {
    public R visit(field_modifier n);
 
    /**
-    * f0 -> ( "=" Expression() ( "{" accessor_declarations() "}" | ";" ) | "{" accessor_declarations() "}" | ";" )
+    * f0 -> "=" Expression() ( "{" accessor_declarations() "}" | ";" )
+    *       | "{" accessor_declarations() "}"
+    *       | ";"
     */
    public R visit(field_body n);
 
    /**
-    * f0 -> ( accessor_get_declaration() ( accessor_set_declaration() )? | accessor_set_declaration() ( accessor_get_declaration() )? )
+    * f0 -> accessor_get_declaration() ( accessor_set_declaration() )?
+    *       | accessor_set_declaration() ( accessor_get_declaration() )?
     */
    public R visit(accessor_declarations n);
 

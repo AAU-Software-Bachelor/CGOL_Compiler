@@ -690,45 +690,42 @@ field_body field_body() :
 }
 {
    (
+      LOOKAHEAD(3)
+      { n1 = new NodeSequence(4); }
+      n3="=" { n2 = JTBToolkit.makeNodeToken(n3); }
+      { n1.addNode(n2); }
+      n4=Expression()
+      { n1.addNode(n4); }
       (
-         LOOKAHEAD(3)
-         { n1 = new NodeSequence(4); }
-         n3="=" { n2 = JTBToolkit.makeNodeToken(n3); }
-         { n1.addNode(n2); }
-         n4=Expression()
-         { n1.addNode(n4); }
          (
-            (
-               { n6 = new NodeSequence(3); }
-               n8="{" { n7 = JTBToolkit.makeNodeToken(n8); }
-               { n6.addNode(n7); }
-               n9=accessor_declarations()
-               { n6.addNode(n9); }
-               n11="}" { n10 = JTBToolkit.makeNodeToken(n11); }
-               { n6.addNode(n10); }
-               { n5 = new NodeChoice(n6, 0); }
-            |
-               n13=";" { n12 = JTBToolkit.makeNodeToken(n13); }
-               { n5 = new NodeChoice(n12, 1); }
-            )
-            
+            { n6 = new NodeSequence(3); }
+            n8="{" { n7 = JTBToolkit.makeNodeToken(n8); }
+            { n6.addNode(n7); }
+            n9=accessor_declarations()
+            { n6.addNode(n9); }
+            n11="}" { n10 = JTBToolkit.makeNodeToken(n11); }
+            { n6.addNode(n10); }
+            { n5 = new NodeChoice(n6, 0); }
+         |
+            n13=";" { n12 = JTBToolkit.makeNodeToken(n13); }
+            { n5 = new NodeChoice(n12, 1); }
          )
-         { n1.addNode(n5); }
-         { n0 = new NodeChoice(n1, 0); }
-      |
-         { n14 = new NodeSequence(3); }
-         n16="{" { n15 = JTBToolkit.makeNodeToken(n16); }
-         { n14.addNode(n15); }
-         n17=accessor_declarations()
-         { n14.addNode(n17); }
-         n19="}" { n18 = JTBToolkit.makeNodeToken(n19); }
-         { n14.addNode(n18); }
-         { n0 = new NodeChoice(n14, 1); }
-      |
-         n21=";" { n20 = JTBToolkit.makeNodeToken(n21); }
-         { n0 = new NodeChoice(n20, 2); }
+         
       )
-      
+      { n1.addNode(n5); }
+      { n0 = new NodeChoice(n1, 0); }
+   |
+      { n14 = new NodeSequence(3); }
+      n16="{" { n15 = JTBToolkit.makeNodeToken(n16); }
+      { n14.addNode(n15); }
+      n17=accessor_declarations()
+      { n14.addNode(n17); }
+      n19="}" { n18 = JTBToolkit.makeNodeToken(n19); }
+      { n14.addNode(n18); }
+      { n0 = new NodeChoice(n14, 1); }
+   |
+      n21=";" { n20 = JTBToolkit.makeNodeToken(n21); }
+      { n0 = new NodeChoice(n20, 2); }
    )
    
    { return new field_body(n0); }
@@ -750,32 +747,29 @@ accessor_declarations accessor_declarations() :
 }
 {
    (
+      LOOKAHEAD(2)
+      { n1 = new NodeSequence(3); }
+      n2=accessor_get_declaration()
+      { n1.addNode(n2); }
       (
          LOOKAHEAD(2)
-         { n1 = new NodeSequence(3); }
-         n2=accessor_get_declaration()
-         { n1.addNode(n2); }
-         (
-            LOOKAHEAD(2)
-            n4=accessor_set_declaration()
-            { n3.addNode(n4); }
-         )?
-         { n1.addNode(n3); }
-         { n0 = new NodeChoice(n1, 0); }
-      |
+         n4=accessor_set_declaration()
+         { n3.addNode(n4); }
+      )?
+      { n1.addNode(n3); }
+      { n0 = new NodeChoice(n1, 0); }
+   |
+      LOOKAHEAD(2)
+      { n5 = new NodeSequence(3); }
+      n6=accessor_set_declaration()
+      { n5.addNode(n6); }
+      (
          LOOKAHEAD(2)
-         { n5 = new NodeSequence(3); }
-         n6=accessor_set_declaration()
-         { n5.addNode(n6); }
-         (
-            LOOKAHEAD(2)
-            n8=accessor_get_declaration()
-            { n7.addNode(n8); }
-         )?
-         { n5.addNode(n7); }
-         { n0 = new NodeChoice(n5, 1); }
-      )
-      
+         n8=accessor_get_declaration()
+         { n7.addNode(n8); }
+      )?
+      { n5.addNode(n7); }
+      { n0 = new NodeChoice(n5, 1); }
    )
    
    { return new accessor_declarations(n0); }

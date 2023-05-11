@@ -194,14 +194,17 @@ public class GJVoidDepthFirst<A> implements GJVoidVisitor<A> {
    }
 
    /**
-    * f0 -> ( "=" Expression() ( "{" accessor_declarations() "}" | ";" ) | "{" accessor_declarations() "}" | ";" )
+    * f0 -> "=" Expression() ( "{" accessor_declarations() "}" | ";" )
+    *       | "{" accessor_declarations() "}"
+    *       | ";"
     */
    public void visit(field_body n, A argu) {
       n.f0.accept(this, argu);
    }
 
    /**
-    * f0 -> ( accessor_get_declaration() ( accessor_set_declaration() )? | accessor_set_declaration() ( accessor_get_declaration() )? )
+    * f0 -> accessor_get_declaration() ( accessor_set_declaration() )?
+    *       | accessor_set_declaration() ( accessor_get_declaration() )?
     */
    public void visit(accessor_declarations n, A argu) {
       n.f0.accept(this, argu);

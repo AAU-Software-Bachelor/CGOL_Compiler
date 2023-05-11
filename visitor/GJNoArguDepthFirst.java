@@ -226,7 +226,9 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    }
 
    /**
-    * f0 -> ( "=" Expression() ( "{" accessor_declarations() "}" | ";" ) | "{" accessor_declarations() "}" | ";" )
+    * f0 -> "=" Expression() ( "{" accessor_declarations() "}" | ";" )
+    *       | "{" accessor_declarations() "}"
+    *       | ";"
     */
    public R visit(field_body n) {
       R _ret=null;
@@ -235,7 +237,8 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    }
 
    /**
-    * f0 -> ( accessor_get_declaration() ( accessor_set_declaration() )? | accessor_set_declaration() ( accessor_get_declaration() )? )
+    * f0 -> accessor_get_declaration() ( accessor_set_declaration() )?
+    *       | accessor_set_declaration() ( accessor_get_declaration() )?
     */
    public R visit(accessor_declarations n) {
       R _ret=null;

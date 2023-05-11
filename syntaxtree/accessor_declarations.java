@@ -6,7 +6,8 @@ package syntaxtree;
 
 /**
  * Grammar production:
- * f0 -> ( accessor_get_declaration() ( accessor_set_declaration() )? | accessor_set_declaration() ( accessor_get_declaration() )? )
+ * f0 -> accessor_get_declaration() ( accessor_set_declaration() )?
+ *       | accessor_set_declaration() ( accessor_get_declaration() )?
  */
 public class accessor_declarations implements Node {
    public NodeChoice f0;

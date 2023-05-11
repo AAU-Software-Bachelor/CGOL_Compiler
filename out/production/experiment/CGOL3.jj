@@ -417,13 +417,11 @@ import java.io.IOException;
   void field_body() :
   {printDebugInfo("field_body");}
   {
-      (
-        LOOKAHEAD(3) "=" Expression() ("{" accessor_declarations() "}" | ";")
-      |
-        "{" accessor_declarations() "}"
-      |
-        ";"
-      )
+      LOOKAHEAD(3) "=" Expression() ("{" accessor_declarations() "}" | ";")
+    |
+      "{" accessor_declarations() "}"
+    |
+      ";"
   }
 
   void accessor_declarations() :
@@ -431,11 +429,9 @@ import java.io.IOException;
       printDebugInfo("accessor_declarations");
     }
   {
-    (
-      LOOKAHEAD(2) accessor_get_declaration() (LOOKAHEAD(2) accessor_set_declaration())?
-    |
-      LOOKAHEAD(2) accessor_set_declaration() (LOOKAHEAD(2) accessor_get_declaration())?
-    )
+    LOOKAHEAD(2) accessor_get_declaration() (LOOKAHEAD(2) accessor_set_declaration())?
+  |
+    LOOKAHEAD(2) accessor_set_declaration() (LOOKAHEAD(2) accessor_get_declaration())?
   }
 
   void accessor_get_declaration() :
