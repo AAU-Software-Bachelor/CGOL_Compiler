@@ -63,7 +63,7 @@ public interface GJNoArguVisitor<R> {
     * f3 -> [ "extends" Name() ]
     * f4 -> [ "implements" NameList() ]
     * f5 -> "{"
-    * f6 -> ( ClassBodyDeclaration() )*
+    * f6 -> ( ClassBodyDeclaration() )+
     * f7 -> "}"
     */
    public R visit(ClassDeclaration n);
@@ -72,7 +72,8 @@ public interface GJNoArguVisitor<R> {
     * f0 -> StaticInitializer()
     *       | ConstructorDeclaration()
     *       | MethodDeclaration()
-    *       | ( FieldDeclaration() )*
+    *       | FieldDeclaration()
+    *       | EmptyStatement()
     */
    public R visit(ClassBodyDeclaration n);
 

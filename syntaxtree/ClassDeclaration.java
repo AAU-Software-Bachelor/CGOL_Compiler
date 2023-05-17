@@ -12,7 +12,7 @@ package syntaxtree;
  * f3 -> [ "extends" Name() ]
  * f4 -> [ "implements" NameList() ]
  * f5 -> "{"
- * f6 -> ( ClassBodyDeclaration() )*
+ * f6 -> ( ClassBodyDeclaration() )+
  * f7 -> "}"
  */
 public class ClassDeclaration implements Node {
@@ -22,10 +22,10 @@ public class ClassDeclaration implements Node {
    public NodeOptional f3;
    public NodeOptional f4;
    public NodeToken f5;
-   public NodeListOptional f6;
+   public NodeList f6;
    public NodeToken f7;
 
-   public ClassDeclaration(NodeListOptional n0, NodeToken n1, NodeToken n2, NodeOptional n3, NodeOptional n4, NodeToken n5, NodeListOptional n6, NodeToken n7) {
+   public ClassDeclaration(NodeListOptional n0, NodeToken n1, NodeToken n2, NodeOptional n3, NodeOptional n4, NodeToken n5, NodeList n6, NodeToken n7) {
       f0 = n0;
       f1 = n1;
       f2 = n2;
@@ -36,7 +36,7 @@ public class ClassDeclaration implements Node {
       f7 = n7;
    }
 
-   public ClassDeclaration(NodeListOptional n0, NodeToken n1, NodeOptional n2, NodeOptional n3, NodeListOptional n4) {
+   public ClassDeclaration(NodeListOptional n0, NodeToken n1, NodeOptional n2, NodeOptional n3, NodeList n4) {
       f0 = n0;
       f1 = new NodeToken("class");
       f2 = n1;

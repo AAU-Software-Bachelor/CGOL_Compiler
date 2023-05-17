@@ -63,7 +63,7 @@ public interface GJVoidVisitor<A> {
     * f3 -> [ "extends" Name() ]
     * f4 -> [ "implements" NameList() ]
     * f5 -> "{"
-    * f6 -> ( ClassBodyDeclaration() )*
+    * f6 -> ( ClassBodyDeclaration() )+
     * f7 -> "}"
     */
    public void visit(ClassDeclaration n, A argu);
@@ -72,7 +72,8 @@ public interface GJVoidVisitor<A> {
     * f0 -> StaticInitializer()
     *       | ConstructorDeclaration()
     *       | MethodDeclaration()
-    *       | ( FieldDeclaration() )*
+    *       | FieldDeclaration()
+    *       | EmptyStatement()
     */
    public void visit(ClassBodyDeclaration n, A argu);
 

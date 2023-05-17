@@ -56,17 +56,12 @@ public class JavaParser
          Node root = parser.CompilationUnit();
          MyVisitor v = new MyVisitor();
          root.accept(v);
-         v.writeOutputToFile();
          System.out.println("Java Parser Version 1.0.2:  Java program parsed successfully.");
       }
       catch (ParseException e)
       {
          System.out.println("Java Parser Version 1.0.2:  Encountered errors during parse.");
          System.out.println(e.toString());
-      }
-      catch (IOException e)
-      {
-         throw new RuntimeException(e);
       }
    }
 }
@@ -363,7 +358,7 @@ ClassDeclaration ClassDeclaration() :
    NameList n21;
    NodeToken n22;
    Token n23;
-   NodeListOptional n24 = new NodeListOptional();
+   NodeList n24 = new NodeList();
    ClassBodyDeclaration n25;
    NodeToken n26;
    Token n27;
@@ -407,7 +402,7 @@ ClassDeclaration ClassDeclaration() :
    (
       n25=ClassBodyDeclaration()
       { n24.addNode(n25); }
-   )*
+   )+
    { n24.nodes.trimToSize(); }
    n27="}" { n26 = JTBToolkit.makeNodeToken(n27); }
    
@@ -420,8 +415,8 @@ ClassBodyDeclaration ClassBodyDeclaration() :
    StaticInitializer n1;
    ConstructorDeclaration n2;
    MethodDeclaration n3;
-   NodeListOptional n4 = new NodeListOptional();
-   FieldDeclaration n5;
+   FieldDeclaration n4;
+   EmptyStatement n5;
 
    printDebugInfo("ClassBodyDeclaration");
 }
@@ -439,12 +434,11 @@ ClassBodyDeclaration ClassBodyDeclaration() :
       n3=MethodDeclaration()
       { n0 = new NodeChoice(n3, 2); }
    |
-      (
-         n5=FieldDeclaration()
-         { n4.addNode(n5); }
-      )*
-      { n4.nodes.trimToSize(); }
+      n4=FieldDeclaration()
       { n0 = new NodeChoice(n4, 3); }
+   |
+      n5=EmptyStatement()
+      { n0 = new NodeChoice(n5, 4); }
    )
    
    { return new ClassBodyDeclaration(n0); }

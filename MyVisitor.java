@@ -6,19 +6,24 @@
 import syntaxtree.*;
 import visitor.DepthFirstVisitor;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Vector;
 
 public class MyVisitor extends DepthFirstVisitor {
-   public static String output;
+   public static String firstClassName = "";
+   public static int order = 0;
+   public String output;
    private String fileName;
+   private boolean methodOptional = false;
 
    private FieldDecoration currentField = null;
-   //String[] spaces = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"};
-   String[] spaces = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
+   //String[] spaces = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22"};
+   String[] spaces = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
    private boolean unary = false;
 
    private static class FieldDecoration {
@@ -83,8 +88,10 @@ public class MyVisitor extends DepthFirstVisitor {
 
    public void visit(NodeListOptional n) {
       for (Node node: n.nodes) {
+         if(methodOptional && !output.endsWith(" ")) output += spaces[22];
          node.accept(this);
       }
+      methodOptional = false;
    }
 
    public void visit(PackageDeclaration n) {
@@ -92,6 +99,10 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(ClassDeclaration n) {
+      if(order == 0) {
+         firstClassName = n.f2.toString();
+      }
+
       fileName = n.f2.toString() + ".java";
 
       output = "package outputs;\n\n" + output;
@@ -109,18 +120,29 @@ public class MyVisitor extends DepthFirstVisitor {
       n.f6.accept(this);
       output += "\n}\n";
       try {
-         writeToFile(helpers.autoTab(output));
+         output = helpers.autoTab(output);
+         writeOutputToFile();
       } catch (IOException e) {
          e.printStackTrace();
       }
    }
 
    public void visit(ImportDeclaration n) {
+      order++;
+      try {
+         JavaParser parser = new JavaParser(new java.io.FileInputStream(n.f1.f0.toString() + ".cgol3"));
+         Node newDocRoot = parser.CompilationUnit();
+         MyVisitor v = new MyVisitor();
+         newDocRoot.accept(v);
+      } catch (Exception e) {
+         System.out.println(e.toString());
+      }
+
       n.f0.accept(this);
-      output += " ";
+      output += " outputs.";
       n.f1.accept(this);
       n.f3.accept(this);
-      output += ";\n";
+      output += ".*;\n";
    }
    
    public void visit(ClassBodyDeclaration n) {
@@ -179,6 +201,7 @@ public class MyVisitor extends DepthFirstVisitor {
       output += "\n";
    }
    public void visit(MethodDeclaration n) {
+      if(n.f0.size() > 1) methodOptional = true;
       n.f0.accept(this);
       if(!n.f0.nodes.isEmpty()) output += " ";
       n.f1.accept(this);
@@ -415,9 +438,9 @@ public class MyVisitor extends DepthFirstVisitor {
       n.f1.accept(this);
    }
    public void visit(UnaryExpression n) {
-      System.out.println(output);
+      //System.out.println(output);
       //if(output.endsWith(" ")) output = output.substring(0, output.length() - 1);
-      System.out.println(output);
+      //System.out.println(output);
       n.f0.accept(this);
    }
 
@@ -447,10 +470,36 @@ public class MyVisitor extends DepthFirstVisitor {
       n.f0.choice.accept(this);
    }
 
-   public void writeToFile(String input) throws IOException {
-      Files.write(Paths.get("outputs/" + fileName), input.getBytes());
+   public void writeOutputToFile() throws IOException {
+      Files.createDirectories(Paths.get("outputs"));
+      Files.write(Paths.get("outputs/" + fileName), output.getBytes());
+      if (order == 0) {
+         try {
+
+            ProcessBuilder builder = new ProcessBuilder(
+                    "javac", "outputs/" + firstClassName + ".java");
+            builder.redirectErrorStream(true);
+            Process p = builder.start();
+
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(p.getInputStream()));
+            StringBuilder Sbuilder = new StringBuilder();
+            String line = null;
+            while ( (line = reader.readLine()) != null) {
+               Sbuilder.append(line);
+               Sbuilder.append(System.getProperty("line.separator"));
+            }
+            String result = Sbuilder.toString();
+            System.out.println(result);
+
+
+         } catch (Exception e) {
+            System.out.println("There were errors in the Java code and Javac could not compile it. Error:");
+            System.out.println(e.toString());
+         }
+
+      } else {
+         order--;
+      }
    }
-
-
-
 }

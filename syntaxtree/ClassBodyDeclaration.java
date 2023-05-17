@@ -9,7 +9,8 @@ package syntaxtree;
  * f0 -> StaticInitializer()
  *       | ConstructorDeclaration()
  *       | MethodDeclaration()
- *       | ( FieldDeclaration() )*
+ *       | FieldDeclaration()
+ *       | EmptyStatement()
  */
 public class ClassBodyDeclaration implements Node {
    public NodeChoice f0;
