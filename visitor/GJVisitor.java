@@ -189,10 +189,29 @@ public interface GJVisitor<R,A> {
    public R visit(FormalParameters n, A argu);
 
    /**
-    * f0 -> Type()
-    * f1 -> VariableDeclaratorId()
+    * f0 -> OptionalParameter()
+    *       | RequiredParameter()
     */
    public R visit(FormalParameter n, A argu);
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    */
+   public R visit(RequiredParameter n, A argu);
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    * f2 -> "="
+    * f3 -> Literal()
+    */
+   public R visit(OptionalParameter n, A argu);
+
+   /**
+    * f0 -> Literal()
+    */
+   public R visit(DefaultValue n, A argu);
 
    /**
     * f0 -> [ "public" | "protected" | "private" ]

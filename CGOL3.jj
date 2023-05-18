@@ -36,11 +36,10 @@
 import java.io.IOException;
 
   public class JavaParser {
-  static void printDebugInfo(String productionName) {
-//      Token t = getToken(1);
-//      System.err.println("Parsing " + productionName + " at line " + t.beginLine + ", column " + t.beginColumn);
-
-    }
+    public void printDebugInfo(String productionName) {
+      Token t = this.getToken(1);
+      System.err.println("Parsing " + productionName + " at line " + t.beginLine + ", column " + t.beginColumn);
+  }
     public static void main(String args[]) {
       JavaParser parser;
       if (args.length == 0) {
@@ -489,9 +488,25 @@ import java.io.IOException;
     }
 
     void FormalParameter() :
-    {printDebugInfo("FormalParameter");}
+    {}
     {
-      Type() VariableDeclaratorId()
+       LOOKAHEAD(2) OptionalParameter() |  RequiredParameter()
+    }
+    void RequiredParameter() :
+    {printDebugInfo("RequiredParameter");}
+    {
+      Type() <IDENTIFIER> 
+    }
+    void OptionalParameter() :
+    {printDebugInfo("OptionalParameter");}
+    {
+      Type() <IDENTIFIER> "=" Literal()
+    }
+
+    void DefaultValue() :
+    {printDebugInfo("Defaultvalue");}
+    {
+      Literal()
     }
 
     void ConstructorDeclaration() :

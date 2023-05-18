@@ -1,5 +1,12 @@
 public class DomCard {
+
+private String noName ="blah"{set; public get;}
+public static void tellmesecrets(String secret, String Batman="bruce"){
+    System.out.println("secret one is "+ secret );
+    System.out.println("Batmans name is "+ Batman );
+  }
     public static void main(String[] args) {
-        System.out.println("hello world");
+        tellmesecrets("Clark Kent is Superman");      
     }
+    
 }

@@ -349,13 +349,47 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    }
 
    /**
-    * f0 -> Type()
-    * f1 -> VariableDeclaratorId()
+    * f0 -> OptionalParameter()
+    *       | RequiredParameter()
     */
    public R visit(FormalParameter n) {
       R _ret=null;
       n.f0.accept(this);
+      return _ret;
+   }
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    */
+   public R visit(RequiredParameter n) {
+      R _ret=null;
+      n.f0.accept(this);
       n.f1.accept(this);
+      return _ret;
+   }
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    * f2 -> "="
+    * f3 -> Literal()
+    */
+   public R visit(OptionalParameter n) {
+      R _ret=null;
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      return _ret;
+   }
+
+   /**
+    * f0 -> Literal()
+    */
+   public R visit(DefaultValue n) {
+      R _ret=null;
+      n.f0.accept(this);
       return _ret;
    }
 

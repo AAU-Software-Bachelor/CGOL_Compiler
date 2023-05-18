@@ -287,12 +287,40 @@ public class DepthFirstVisitor implements Visitor {
    }
 
    /**
-    * f0 -> Type()
-    * f1 -> VariableDeclaratorId()
+    * f0 -> OptionalParameter()
+    *       | RequiredParameter()
     */
    public void visit(FormalParameter n) {
       n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    */
+   public void visit(RequiredParameter n) {
+      n.f0.accept(this);
       n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    * f2 -> "="
+    * f3 -> Literal()
+    */
+   public void visit(OptionalParameter n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+   }
+
+   /**
+    * f0 -> Literal()
+    */
+   public void visit(DefaultValue n) {
+      n.f0.accept(this);
    }
 
    /**
