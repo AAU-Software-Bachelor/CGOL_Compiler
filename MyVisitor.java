@@ -22,8 +22,8 @@ public class MyVisitor extends DepthFirstVisitor {
    private boolean methodOptional = false;
 
    private FieldDecoration currentField = null;
-   //String[] spaces = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22"};
-   String[] spaces = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
+   String[] spaces = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
+   //String[] spaces = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
    private boolean unary = false;
 
    private static class FieldDecoration {
@@ -130,7 +130,7 @@ public class MyVisitor extends DepthFirstVisitor {
    public void visit(ImportDeclaration n) {
       order++;
       try {
-         JavaParser parser = new JavaParser(new java.io.FileInputStream(n.f1.f0.toString() + ".cgol3"));
+         JavaParser parser = new JavaParser(new java.io.FileInputStream(n.f1.f0.toString() + ".cgol"));
          Node newDocRoot = parser.CompilationUnit();
          MyVisitor v = new MyVisitor();
          newDocRoot.accept(v);
@@ -354,7 +354,7 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(Literal n) {
-      if(!output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(")) output += spaces[13];
+      if(!output.endsWith(" ") && !output.endsWith("\n") && !output.endsWith("(") && !output.endsWith("[")) output += spaces[13];
       n.f0.accept(this);
    }
 
@@ -468,6 +468,19 @@ public class MyVisitor extends DepthFirstVisitor {
 
    public void visit(Expression n) {
       n.f0.choice.accept(this);
+   }
+
+   public void visit(ConstructorDeclaration n) {
+      int i = 0;
+      n.f0.accept(this);
+      if(n.f0.present() && (!output.endsWith(" ") || !output.endsWith("\n"))) output += spaces[23];
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      if(n.f4.toString().equals("{")) output += "{\n";
+      n.f5.accept(this);
+      n.f6.accept(this);
+      if(n.f7.toString().equals("}")) output += "}\n";
    }
 
    public void writeOutputToFile() throws IOException {
