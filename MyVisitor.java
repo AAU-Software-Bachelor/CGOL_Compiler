@@ -262,7 +262,7 @@ public class MyVisitor extends DepthFirstVisitor {
          for(int i = 0; i < (optionalParams.size()*optionalParams.size() - 1); i++) {
             String bin = Integer.toBinaryString(i);
             bin = String.format("%1$" + 16 + "s", bin).replace(' ', '0');
-            System.out.println(bin);
+            //System.out.println(bin);
             List<CustomOptionalParam> optinalParamsString = new ArrayList<CustomOptionalParam>();
 
 
@@ -297,7 +297,7 @@ public class MyVisitor extends DepthFirstVisitor {
                n.f3.accept(this);
                if(n.f3.present()) output += spaces[25];
                n.f4.accept(this);
-               System.out.println(concatOptionalParams(optinalParamsString));
+               //System.out.println(concatOptionalParams(optinalParamsString));
             } else {
                leftOutOptional.clear();
             }
@@ -306,7 +306,7 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    private boolean isDublicate(List<CustomOptionalParam> params) {
-      System.out.println("Start");
+      //System.out.println("Start");
       for(int i = 0; i < paramDublicateChecker.size(); i++) {
          boolean same = true;
          if(paramDublicateChecker.get(i).size() == 0 ||
@@ -322,11 +322,11 @@ public class MyVisitor extends DepthFirstVisitor {
          }
 
          if(same) {
-            System.out.println("Same");
+            //System.out.println("Same");
             return true;
          }
       }
-      System.out.println("Not Same");
+      //System.out.println("Not Same");
       return false;
    }
 
@@ -689,7 +689,7 @@ public class MyVisitor extends DepthFirstVisitor {
             for (int i = 0; i < (optionalParams.size() * optionalParams.size() - 1); i++) {
                String bin = Integer.toBinaryString(i);
                bin = String.format("%1$" + 16 + "s", bin).replace(' ', '0');
-               System.out.println(bin);
+               //System.out.println(bin);
                List<CustomOptionalParam> optinalParamsString = new ArrayList<CustomOptionalParam>();
 
 
@@ -731,7 +731,6 @@ public class MyVisitor extends DepthFirstVisitor {
                   n.f6.accept(this);
                   output += "}\n";
 
-                  System.out.println(concatOptionalParams(optinalParamsString));
                } else {
                   leftOutOptional.clear();
                }
