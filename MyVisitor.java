@@ -718,11 +718,19 @@ public class MyVisitor extends DepthFirstVisitor {
                   if (!finalParams.isEmpty() && !optinalParamsString.isEmpty()) finalestParams += ", ";
                   finalestParams += concatOptionalParams(optinalParamsString);
 
-                  output += " " + n.f2.f0.toString() + finalestParams + ") ";
+                  output += " " + "(" + finalestParams + ") ";
 
                   n.f3.accept(this);
                   if (n.f3.present()) output += spaces[25];
-                  n.f4.accept(this);
+
+                  n.f5.accept(this);
+
+
+                  output += " {\n";
+                  addOptional();
+                  n.f6.accept(this);
+                  output += "}\n";
+
                   System.out.println(concatOptionalParams(optinalParamsString));
                } else {
                   leftOutOptional.clear();

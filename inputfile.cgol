@@ -1,5 +1,5 @@
 public class DomCard {
-   public Domcard(String firstArgument, String secondArgument, ?String thirdArgument = "There", ?double fourthArgument = 0.0, ?int fifth = 3) {
+   public DomCard(String firstArgument, String secondArgument, ?String thirdArgument = "There", ?double fourthArgument = 0.0, ?int fifth = 3) {
        System.out.println(firstArgument + " - " + secondArgument + " - " + thirdArgument + " - " + fourthArgument);
    }
 
