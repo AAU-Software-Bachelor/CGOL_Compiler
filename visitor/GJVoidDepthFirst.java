@@ -243,23 +243,6 @@ public class GJVoidDepthFirst<A> implements GJVoidVisitor<A> {
    }
 
    /**
-    * f0 -> <IDENTIFIER>
-    * f1 -> ( "[" "]" )*
-    */
-   public void visit(VariableDeclaratorId n, A argu) {
-      n.f0.accept(this, argu);
-      n.f1.accept(this, argu);
-   }
-
-   /**
-    * f0 -> "{" [ VariableInitializer() ( "," VariableInitializer() )* ] [ "," ] "}"
-    *       | Expression()
-    */
-   public void visit(VariableInitializer n, A argu) {
-      n.f0.accept(this, argu);
-   }
-
-   /**
     * f0 -> ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" )*
     * f1 -> ResultType()
     * f2 -> MethodDeclarator()
@@ -315,6 +298,23 @@ public class GJVoidDepthFirst<A> implements GJVoidVisitor<A> {
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
+   }
+
+   /**
+    * f0 -> <IDENTIFIER>
+    * f1 -> ( "[" "]" )*
+    */
+   public void visit(VariableDeclaratorId n, A argu) {
+      n.f0.accept(this, argu);
+      n.f1.accept(this, argu);
+   }
+
+   /**
+    * f0 -> "{" [ VariableInitializer() ( "," VariableInitializer() )* ] [ "," ] "}"
+    *       | Expression()
+    */
+   public void visit(VariableInitializer n, A argu) {
+      n.f0.accept(this, argu);
    }
 
    /**

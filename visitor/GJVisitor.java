@@ -154,18 +154,6 @@ public interface GJVisitor<R,A> {
    public R visit(VariableDeclarator n, A argu);
 
    /**
-    * f0 -> <IDENTIFIER>
-    * f1 -> ( "[" "]" )*
-    */
-   public R visit(VariableDeclaratorId n, A argu);
-
-   /**
-    * f0 -> "{" [ VariableInitializer() ( "," VariableInitializer() )* ] [ "," ] "}"
-    *       | Expression()
-    */
-   public R visit(VariableInitializer n, A argu);
-
-   /**
     * f0 -> ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" )*
     * f1 -> ResultType()
     * f2 -> MethodDeclarator()
@@ -201,6 +189,18 @@ public interface GJVisitor<R,A> {
     * f3 -> Expression()
     */
    public R visit(OptionalParameter n, A argu);
+
+   /**
+    * f0 -> <IDENTIFIER>
+    * f1 -> ( "[" "]" )*
+    */
+   public R visit(VariableDeclaratorId n, A argu);
+
+   /**
+    * f0 -> "{" [ VariableInitializer() ( "," VariableInitializer() )* ] [ "," ] "}"
+    *       | Expression()
+    */
+   public R visit(VariableInitializer n, A argu);
 
    /**
     * f0 -> Literal()

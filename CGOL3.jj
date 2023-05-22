@@ -453,19 +453,7 @@ import java.io.IOException;
       VariableDeclaratorId() [ "=" VariableInitializer() ]
     }
 
-    void VariableDeclaratorId() :
-    {printDebugInfo("VariableDeclaratorId");}
-    {
-      <IDENTIFIER> ( "[" "]" )*
-    }
 
-    void VariableInitializer() :
-    {printDebugInfo("VariableInit");}
-    {
-      "{" [ VariableInitializer() ( LOOKAHEAD(2) "," VariableInitializer() )* ] [ "," ] "}"
-    |
-      Expression()
-    }
 
     void MethodDeclaration() :
     {printDebugInfo("MethodDeclaration");}
@@ -481,27 +469,40 @@ import java.io.IOException;
           <IDENTIFIER> FormalParameters() ( "[" "]" )*
         }
 
-        void FormalParameters() :
-        {}
-        {
-          "(" [ FormalParameter() ( "," FormalParameter() )* ] ")"
-        }
+    void FormalParameters() :
+    {}
+    {
+      "(" [ FormalParameter() ( "," FormalParameter() )* ] ")"
+    }
 
-        void FormalParameter() :
-        {}
-        {
-        LOOKAHEAD(3)
-        Type() <IDENTIFIER>
-        |
-         "?" OptionalParameter()
-        }
+    void FormalParameter() :
+    {}
+    {
+    LOOKAHEAD(3)
+    Type() <IDENTIFIER>
+    |
+     "?" OptionalParameter()
+    }
 
-        void OptionalParameter() :
-        {printDebugInfo("OptionalParameter");}
-        {
-         Type() <IDENTIFIER> "=" Expression()
-        }
+    void OptionalParameter() :
+    {printDebugInfo("OptionalParameter");}
+    {
+     Type() <IDENTIFIER> "=" Expression()
+    }
 
+void VariableDeclaratorId() :
+    {printDebugInfo("VariableDeclaratorId");}
+    {
+      <IDENTIFIER> ( "[" "]" )*
+    }
+
+    void VariableInitializer() :
+    {printDebugInfo("VariableInit");}
+    {
+      "{" [ VariableInitializer() ( LOOKAHEAD(2) "," VariableInitializer() )* ] [ "," ] "}"
+    |
+      Expression()
+    }
     void DefaultValue() :
     {printDebugInfo("Defaultvalue");}
     {

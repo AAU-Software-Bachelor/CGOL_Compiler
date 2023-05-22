@@ -154,18 +154,6 @@ public interface GJNoArguVisitor<R> {
    public R visit(VariableDeclarator n);
 
    /**
-    * f0 -> <IDENTIFIER>
-    * f1 -> ( "[" "]" )*
-    */
-   public R visit(VariableDeclaratorId n);
-
-   /**
-    * f0 -> "{" [ VariableInitializer() ( "," VariableInitializer() )* ] [ "," ] "}"
-    *       | Expression()
-    */
-   public R visit(VariableInitializer n);
-
-   /**
     * f0 -> ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" )*
     * f1 -> ResultType()
     * f2 -> MethodDeclarator()
@@ -201,6 +189,18 @@ public interface GJNoArguVisitor<R> {
     * f3 -> Expression()
     */
    public R visit(OptionalParameter n);
+
+   /**
+    * f0 -> <IDENTIFIER>
+    * f1 -> ( "[" "]" )*
+    */
+   public R visit(VariableDeclaratorId n);
+
+   /**
+    * f0 -> "{" [ VariableInitializer() ( "," VariableInitializer() )* ] [ "," ] "}"
+    *       | Expression()
+    */
+   public R visit(VariableInitializer n);
 
    /**
     * f0 -> Literal()

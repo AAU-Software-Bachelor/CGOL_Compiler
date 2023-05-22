@@ -860,97 +860,6 @@ VariableDeclarator VariableDeclarator() :
    { return new VariableDeclarator(n0,n1); }
 }
 
-VariableDeclaratorId VariableDeclaratorId() :
-{
-   NodeToken n0;
-   Token n1;
-   NodeListOptional n2 = new NodeListOptional();
-   NodeSequence n3;
-   NodeToken n4;
-   Token n5;
-   NodeToken n6;
-   Token n7;
-
-   printDebugInfo("VariableDeclaratorId");
-}
-{
-   n1=<IDENTIFIER> { n0 = JTBToolkit.makeNodeToken(n1); }
-   (
-      { n3 = new NodeSequence(2); }
-      n5="[" { n4 = JTBToolkit.makeNodeToken(n5); }
-      { n3.addNode(n4); }
-      n7="]" { n6 = JTBToolkit.makeNodeToken(n7); }
-      { n3.addNode(n6); }
-      { n2.addNode(n3); }
-   )*
-   { n2.nodes.trimToSize(); }
-   
-   { return new VariableDeclaratorId(n0,n2); }
-}
-
-VariableInitializer VariableInitializer() :
-{
-   NodeChoice n0;
-   NodeSequence n1;
-   NodeToken n2;
-   Token n3;
-   NodeOptional n4 = new NodeOptional();
-   NodeSequence n5;
-   VariableInitializer n6;
-   NodeListOptional n7;
-   NodeSequence n8;
-   NodeToken n9;
-   Token n10;
-   VariableInitializer n11;
-   NodeOptional n12 = new NodeOptional();
-   NodeToken n13;
-   Token n14;
-   NodeToken n15;
-   Token n16;
-   Expression n17;
-
-   printDebugInfo("VariableInit");
-}
-{
-   (
-      { n1 = new NodeSequence(4); }
-      n3="{" { n2 = JTBToolkit.makeNodeToken(n3); }
-      { n1.addNode(n2); }
-      (
-         { n7 = new NodeListOptional(); }
-         { n5 = new NodeSequence(2); }
-         n6=VariableInitializer()
-         { n5.addNode(n6); }
-         (
-            LOOKAHEAD(2)
-            { n8 = new NodeSequence(2); }
-            n10="," { n9 = JTBToolkit.makeNodeToken(n10); }
-            { n8.addNode(n9); }
-            n11=VariableInitializer()
-            { n8.addNode(n11); }
-            { n7.addNode(n8); }
-         )*
-         { n7.nodes.trimToSize(); }
-         { n5.addNode(n7); }
-         { n4.addNode(n5); }
-      )?
-      { n1.addNode(n4); }
-      (
-         n14="," { n13 = JTBToolkit.makeNodeToken(n14); }
-         { n12.addNode(n13); }
-      )?
-      { n1.addNode(n12); }
-      n16="}" { n15 = JTBToolkit.makeNodeToken(n16); }
-      { n1.addNode(n15); }
-      { n0 = new NodeChoice(n1, 0); }
-   |
-      n17=Expression()
-      { n0 = new NodeChoice(n17, 1); }
-   )
-   
-   { return new VariableInitializer(n0); }
-}
-
 MethodDeclaration MethodDeclaration() :
 {
    NodeListOptional n0 = new NodeListOptional();
@@ -1163,6 +1072,97 @@ OptionalParameter OptionalParameter() :
    n5=Expression()
    
    { return new OptionalParameter(n0,n1,n3,n5); }
+}
+
+VariableDeclaratorId VariableDeclaratorId() :
+{
+   NodeToken n0;
+   Token n1;
+   NodeListOptional n2 = new NodeListOptional();
+   NodeSequence n3;
+   NodeToken n4;
+   Token n5;
+   NodeToken n6;
+   Token n7;
+
+   printDebugInfo("VariableDeclaratorId");
+}
+{
+   n1=<IDENTIFIER> { n0 = JTBToolkit.makeNodeToken(n1); }
+   (
+      { n3 = new NodeSequence(2); }
+      n5="[" { n4 = JTBToolkit.makeNodeToken(n5); }
+      { n3.addNode(n4); }
+      n7="]" { n6 = JTBToolkit.makeNodeToken(n7); }
+      { n3.addNode(n6); }
+      { n2.addNode(n3); }
+   )*
+   { n2.nodes.trimToSize(); }
+   
+   { return new VariableDeclaratorId(n0,n2); }
+}
+
+VariableInitializer VariableInitializer() :
+{
+   NodeChoice n0;
+   NodeSequence n1;
+   NodeToken n2;
+   Token n3;
+   NodeOptional n4 = new NodeOptional();
+   NodeSequence n5;
+   VariableInitializer n6;
+   NodeListOptional n7;
+   NodeSequence n8;
+   NodeToken n9;
+   Token n10;
+   VariableInitializer n11;
+   NodeOptional n12 = new NodeOptional();
+   NodeToken n13;
+   Token n14;
+   NodeToken n15;
+   Token n16;
+   Expression n17;
+
+   printDebugInfo("VariableInit");
+}
+{
+   (
+      { n1 = new NodeSequence(4); }
+      n3="{" { n2 = JTBToolkit.makeNodeToken(n3); }
+      { n1.addNode(n2); }
+      (
+         { n7 = new NodeListOptional(); }
+         { n5 = new NodeSequence(2); }
+         n6=VariableInitializer()
+         { n5.addNode(n6); }
+         (
+            LOOKAHEAD(2)
+            { n8 = new NodeSequence(2); }
+            n10="," { n9 = JTBToolkit.makeNodeToken(n10); }
+            { n8.addNode(n9); }
+            n11=VariableInitializer()
+            { n8.addNode(n11); }
+            { n7.addNode(n8); }
+         )*
+         { n7.nodes.trimToSize(); }
+         { n5.addNode(n7); }
+         { n4.addNode(n5); }
+      )?
+      { n1.addNode(n4); }
+      (
+         n14="," { n13 = JTBToolkit.makeNodeToken(n14); }
+         { n12.addNode(n13); }
+      )?
+      { n1.addNode(n12); }
+      n16="}" { n15 = JTBToolkit.makeNodeToken(n16); }
+      { n1.addNode(n15); }
+      { n0 = new NodeChoice(n1, 0); }
+   |
+      n17=Expression()
+      { n0 = new NodeChoice(n17, 1); }
+   )
+   
+   { return new VariableInitializer(n0); }
 }
 
 DefaultValue DefaultValue() :

@@ -154,18 +154,6 @@ public interface Visitor {
    public void visit(VariableDeclarator n);
 
    /**
-    * f0 -> <IDENTIFIER>
-    * f1 -> ( "[" "]" )*
-    */
-   public void visit(VariableDeclaratorId n);
-
-   /**
-    * f0 -> "{" [ VariableInitializer() ( "," VariableInitializer() )* ] [ "," ] "}"
-    *       | Expression()
-    */
-   public void visit(VariableInitializer n);
-
-   /**
     * f0 -> ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" )*
     * f1 -> ResultType()
     * f2 -> MethodDeclarator()
@@ -201,6 +189,18 @@ public interface Visitor {
     * f3 -> Expression()
     */
    public void visit(OptionalParameter n);
+
+   /**
+    * f0 -> <IDENTIFIER>
+    * f1 -> ( "[" "]" )*
+    */
+   public void visit(VariableDeclaratorId n);
+
+   /**
+    * f0 -> "{" [ VariableInitializer() ( "," VariableInitializer() )* ] [ "," ] "}"
+    *       | Expression()
+    */
+   public void visit(VariableInitializer n);
 
    /**
     * f0 -> Literal()

@@ -233,23 +233,6 @@ public class DepthFirstVisitor implements Visitor {
    }
 
    /**
-    * f0 -> <IDENTIFIER>
-    * f1 -> ( "[" "]" )*
-    */
-   public void visit(VariableDeclaratorId n) {
-      n.f0.accept(this);
-      n.f1.accept(this);
-   }
-
-   /**
-    * f0 -> "{" [ VariableInitializer() ( "," VariableInitializer() )* ] [ "," ] "}"
-    *       | Expression()
-    */
-   public void visit(VariableInitializer n) {
-      n.f0.accept(this);
-   }
-
-   /**
     * f0 -> ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" )*
     * f1 -> ResultType()
     * f2 -> MethodDeclarator()
@@ -305,6 +288,23 @@ public class DepthFirstVisitor implements Visitor {
       n.f1.accept(this);
       n.f2.accept(this);
       n.f3.accept(this);
+   }
+
+   /**
+    * f0 -> <IDENTIFIER>
+    * f1 -> ( "[" "]" )*
+    */
+   public void visit(VariableDeclaratorId n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> "{" [ VariableInitializer() ( "," VariableInitializer() )* ] [ "," ] "}"
+    *       | Expression()
+    */
+   public void visit(VariableInitializer n) {
+      n.f0.accept(this);
    }
 
    /**

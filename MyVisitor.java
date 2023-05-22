@@ -6,9 +6,18 @@
 import syntaxtree.*;
 import visitor.DepthFirstVisitor;
 
+// the ai made me import this vv
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import syntaxtree.Node;
+import syntaxtree.FormalParameter;
+// the ai made me import this ^^
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Parameter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -201,23 +210,92 @@ public class MyVisitor extends DepthFirstVisitor {
       output += "\n";
    }
    public void visit(MethodDeclaration n) {
-      int i = 0;
-      if(n.f0.size() > 1) methodOptional = true;
-      n.f0.accept(this);
-      if(!n.f0.nodes.isEmpty()) output += " ";
-      n.f1.accept(this);
-      output += " ";
-      n.f2.accept(this);
-      if(n.f3.present()) output += " ";
-      n.f3.accept(this);
-      if(n.f3.present()) output += " ";
-      n.f4.accept(this);
+      // First, we should collect all parameters.
+      Node paramsNode = n.f2.node;
+
+      // Collect all parameters into a list
+      List<Parameter> allParameters = new ArrayList<>();
+      if (paramsNode instanceof NodeSequence) {
+         NodeSequence paramsNodeSeq = (NodeSequence) paramsNode;
+         for (int i = 0; i < paramsNodeSeq.size(); i++) {
+            Node paramNode = paramsNodeSeq.elementAt(i);
+            if (paramNode instanceof FormalParameter) {
+               FormalParameter formalParameter = (FormalParameter) paramNode;
+               String paramName = ((NodeToken) formalParameter.f1.node).tokenImage;
+               String paramType = ((NodeToken) formalParameter.f0.choice).toString();
+
+               // If the FormalParameter is an optional parameter, get its default value.
+               // I'm assuming that your OptionalParameter node includes a child node for the default value.
+               String defaultValue = null;
+               if (formalParameter.f0.which == 1) {
+                  NodeSequence seq = (NodeSequence) formalParameter.f0.choice;
+                  defaultValue = ((NodeToken) seq.elementAt(2).node).tokenImage;
+               }
+
+               Parameter param = new Parameter(paramType, paramName, defaultValue);
+               allParameters.add(param);
+            }
+         }
+      }
+
+      // Now, we can start generating methods.
+      // For each combination of parameters, we generate a new method.
+      List<Parameter> mandatoryParameters = allParameters.stream()
+              .filter(p -> p.defaultValue == null)
+              .collect(Collectors.toList());
+
+      List<Parameter> optionalParameters = allParameters.stream()
+              .filter(p -> p.defaultValue != null)
+              .collect(Collectors.toList());
+
+      for (int i = 0; i <= optionalParameters.size(); i++) {
+         List<Parameter> currentParams = new ArrayList<>(mandatoryParameters);
+         currentParams.addAll(optionalParameters.subList(0, i));
+         generateMethod(n, currentParams, optionalParameters.subList(i, optionalParameters.size()));
+      }
    }
+
+
+   public void generateMethod(MethodDeclaration originalMethod, List<Parameter> parameters, List<Parameter> defaultValues) {
+      // Here, you should generate the code for each method.
+      // This includes the method declaration with parameters, the method body,
+      // and possibly calling the next method with the default values.
+      // You should use the originalMethod for any data that doesn't change, like the method name or return type.
+   }
+
    public void visit(MethodDeclarator n) {
-      int i = 0;
       n.f0.accept(this);
       n.f1.accept(this);
+      if(n.f2.present()) output += " ";
       n.f2.accept(this);
+   }
+
+
+   public void visit(FormalParameters n) {
+      n.f0.accept(this);
+      if (n.f1.present() && n.f1.node instanceof NodeSequence) {
+         NodeSequence sequence = (NodeSequence) n.f1.node;
+         for (int i = 0; i < sequence.size(); i++) {
+            sequence.elementAt(i).accept(this);
+            if (i != sequence.size() - 1) {
+               output += ", ";
+            }
+         }
+      }
+      n.f2.accept(this);
+   }
+   public void visit(FormalParameter n) {
+      NodeSequence seq = (NodeSequence) n.f0.choice;
+      seq.elementAt(0).accept(this);
+      output += " ";
+      seq.elementAt(1).accept(this);
+
+      if (n.f0.which == 1) { // Optional parameter
+         if (seq.size() > 2) {
+            output += " = ";
+            seq.elementAt(2).accept(this);
+         }
+      }
    }
 
    public void visit(LocalVariableDeclaration n) {
@@ -239,19 +317,6 @@ public class MyVisitor extends DepthFirstVisitor {
       if(n.f1.present()) output += spaces[17];
       n.f1.accept(this);
 
-   }
-
-   public void visit(FormalParameters n) {
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-   }
-
-   public void visit(FormalParameter n) {
-      Vector<Node> a = ((NodeSequence)n.f0.choice).nodes;
-      a.get(0).accept(this);
-      output += spaces[24];
-      a.get(1).accept(this);
    }
 
    public void visit(FieldDeclaration n) {

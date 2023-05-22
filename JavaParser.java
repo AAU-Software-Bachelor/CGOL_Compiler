@@ -1026,6 +1026,309 @@ n1.addNode(n2);
     throw new Error("Missing return statement in function");
 }
 
+  final public MethodDeclaration MethodDeclaration() throws ParseException {NodeListOptional n0 = new NodeListOptional();
+   NodeChoice n1;
+   NodeToken n2;
+   Token n3;
+   NodeToken n4;
+   Token n5;
+   NodeToken n6;
+   Token n7;
+   NodeToken n8;
+   Token n9;
+   NodeToken n10;
+   Token n11;
+   NodeToken n12;
+   Token n13;
+   NodeToken n14;
+   Token n15;
+   NodeToken n16;
+   Token n17;
+   ResultType n18;
+   MethodDeclarator n19;
+   NodeOptional n20 = new NodeOptional();
+   NodeSequence n21;
+   NodeToken n22;
+   Token n23;
+   NameList n24;
+   NodeChoice n25;
+   Block n26;
+   NodeToken n27;
+   Token n28;
+
+   printDebugInfo("MethodDeclaration");
+    label_9:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case ABSTRACT:
+      case FINAL:
+      case NATIVE:
+      case PRIVATE:
+      case PROTECTED:
+      case PUBLIC:
+      case STATIC:
+      case SYNCHRONIZED:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[27] = jj_gen;
+        break label_9;
+      }
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case PUBLIC:{
+        n3 = jj_consume_token(PUBLIC);
+n2 = JTBToolkit.makeNodeToken(n3);
+n1 = new NodeChoice(n2, 0);
+        break;
+        }
+      case PROTECTED:{
+        n5 = jj_consume_token(PROTECTED);
+n4 = JTBToolkit.makeNodeToken(n5);
+n1 = new NodeChoice(n4, 1);
+        break;
+        }
+      case PRIVATE:{
+        n7 = jj_consume_token(PRIVATE);
+n6 = JTBToolkit.makeNodeToken(n7);
+n1 = new NodeChoice(n6, 2);
+        break;
+        }
+      case STATIC:{
+        n9 = jj_consume_token(STATIC);
+n8 = JTBToolkit.makeNodeToken(n9);
+n1 = new NodeChoice(n8, 3);
+        break;
+        }
+      case ABSTRACT:{
+        n11 = jj_consume_token(ABSTRACT);
+n10 = JTBToolkit.makeNodeToken(n11);
+n1 = new NodeChoice(n10, 4);
+        break;
+        }
+      case FINAL:{
+        n13 = jj_consume_token(FINAL);
+n12 = JTBToolkit.makeNodeToken(n13);
+n1 = new NodeChoice(n12, 5);
+        break;
+        }
+      case NATIVE:{
+        n15 = jj_consume_token(NATIVE);
+n14 = JTBToolkit.makeNodeToken(n15);
+n1 = new NodeChoice(n14, 6);
+        break;
+        }
+      case SYNCHRONIZED:{
+        n17 = jj_consume_token(SYNCHRONIZED);
+n16 = JTBToolkit.makeNodeToken(n17);
+n1 = new NodeChoice(n16, 7);
+        break;
+        }
+      default:
+        jj_la1[28] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+n0.addNode(n1);
+    }
+n0.nodes.trimToSize();
+    n18 = ResultType();
+    n19 = MethodDeclarator();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case THROWS:{
+n21 = new NodeSequence(2);
+      n23 = jj_consume_token(THROWS);
+n22 = JTBToolkit.makeNodeToken(n23);
+n21.addNode(n22);
+      n24 = NameList();
+n21.addNode(n24);
+n20.addNode(n21);
+      break;
+      }
+    default:
+      jj_la1[29] = jj_gen;
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case LBRACE:{
+      n26 = Block();
+n25 = new NodeChoice(n26, 0);
+      break;
+      }
+    case SEMICOLON:{
+      n28 = jj_consume_token(SEMICOLON);
+n27 = JTBToolkit.makeNodeToken(n28);
+n25 = new NodeChoice(n27, 1);
+      break;
+      }
+    default:
+      jj_la1[30] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+{if ("" != null) return new MethodDeclaration(n0,n18,n19,n20,n25);}
+    throw new Error("Missing return statement in function");
+}
+
+  final public MethodDeclarator MethodDeclarator() throws ParseException {NodeToken n0;
+   Token n1;
+   FormalParameters n2;
+   NodeListOptional n3 = new NodeListOptional();
+   NodeSequence n4;
+   NodeToken n5;
+   Token n6;
+   NodeToken n7;
+   Token n8;
+
+   printDebugInfo("MethodDeclarator");
+    n1 = jj_consume_token(IDENTIFIER);
+n0 = JTBToolkit.makeNodeToken(n1);
+    n2 = FormalParameters();
+    label_10:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case LBRACKET:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[31] = jj_gen;
+        break label_10;
+      }
+n4 = new NodeSequence(2);
+      n6 = jj_consume_token(LBRACKET);
+n5 = JTBToolkit.makeNodeToken(n6);
+n4.addNode(n5);
+      n8 = jj_consume_token(RBRACKET);
+n7 = JTBToolkit.makeNodeToken(n8);
+n4.addNode(n7);
+n3.addNode(n4);
+    }
+n3.nodes.trimToSize();
+{if ("" != null) return new MethodDeclarator(n0,n2,n3);}
+    throw new Error("Missing return statement in function");
+}
+
+  final public FormalParameters FormalParameters() throws ParseException {NodeToken n0;
+   Token n1;
+   NodeOptional n2 = new NodeOptional();
+   NodeSequence n3;
+   FormalParameter n4;
+   NodeListOptional n5;
+   NodeSequence n6;
+   NodeToken n7;
+   Token n8;
+   FormalParameter n9;
+   NodeToken n10;
+   Token n11;
+    n1 = jj_consume_token(LPAREN);
+n0 = JTBToolkit.makeNodeToken(n1);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case BOOLEAN:
+    case BYTE:
+    case CHAR:
+    case DOUBLE:
+    case FLOAT:
+    case INT:
+    case LONG:
+    case SHORT:
+    case IDENTIFIER:
+    case HOOK:{
+n5 = new NodeListOptional();
+n3 = new NodeSequence(2);
+      n4 = FormalParameter();
+n3.addNode(n4);
+      label_11:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case COMMA:{
+          ;
+          break;
+          }
+        default:
+          jj_la1[32] = jj_gen;
+          break label_11;
+        }
+n6 = new NodeSequence(2);
+        n8 = jj_consume_token(COMMA);
+n7 = JTBToolkit.makeNodeToken(n8);
+n6.addNode(n7);
+        n9 = FormalParameter();
+n6.addNode(n9);
+n5.addNode(n6);
+      }
+n5.nodes.trimToSize();
+n3.addNode(n5);
+n2.addNode(n3);
+      break;
+      }
+    default:
+      jj_la1[33] = jj_gen;
+      ;
+    }
+    n11 = jj_consume_token(RPAREN);
+n10 = JTBToolkit.makeNodeToken(n11);
+{if ("" != null) return new FormalParameters(n0,n2,n10);}
+    throw new Error("Missing return statement in function");
+}
+
+  final public FormalParameter FormalParameter() throws ParseException {NodeChoice n0;
+   NodeSequence n1;
+   Type n2;
+   NodeToken n3;
+   Token n4;
+   NodeSequence n5;
+   NodeToken n6;
+   Token n7;
+   OptionalParameter n8;
+    if (jj_2_11(3)) {
+n1 = new NodeSequence(3);
+      n2 = Type();
+n1.addNode(n2);
+      n4 = jj_consume_token(IDENTIFIER);
+n3 = JTBToolkit.makeNodeToken(n4);
+n1.addNode(n3);
+n0 = new NodeChoice(n1, 0);
+    } else {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case HOOK:{
+n5 = new NodeSequence(2);
+        n7 = jj_consume_token(HOOK);
+n6 = JTBToolkit.makeNodeToken(n7);
+n5.addNode(n6);
+        n8 = OptionalParameter();
+n5.addNode(n8);
+n0 = new NodeChoice(n5, 1);
+        break;
+        }
+      default:
+        jj_la1[34] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+{if ("" != null) return new FormalParameter(n0);}
+    throw new Error("Missing return statement in function");
+}
+
+  final public OptionalParameter OptionalParameter() throws ParseException {Type n0;
+   NodeToken n1;
+   Token n2;
+   NodeToken n3;
+   Token n4;
+   Expression n5;
+
+   printDebugInfo("OptionalParameter");
+    n0 = Type();
+    n2 = jj_consume_token(IDENTIFIER);
+n1 = JTBToolkit.makeNodeToken(n2);
+    n4 = jj_consume_token(ASSIGN);
+n3 = JTBToolkit.makeNodeToken(n4);
+    n5 = Expression();
+{if ("" != null) return new OptionalParameter(n0,n1,n3,n5);}
+    throw new Error("Missing return statement in function");
+}
+
   final public VariableDeclaratorId VariableDeclaratorId() throws ParseException {NodeToken n0;
    Token n1;
    NodeListOptional n2 = new NodeListOptional();
@@ -1038,7 +1341,7 @@ n1.addNode(n2);
    printDebugInfo("VariableDeclaratorId");
     n1 = jj_consume_token(IDENTIFIER);
 n0 = JTBToolkit.makeNodeToken(n1);
-    label_9:
+    label_12:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case LBRACKET:{
@@ -1046,8 +1349,8 @@ n0 = JTBToolkit.makeNodeToken(n1);
         break;
         }
       default:
-        jj_la1[27] = jj_gen;
-        break label_9;
+        jj_la1[35] = jj_gen;
+        break label_12;
       }
 n3 = new NodeSequence(2);
       n5 = jj_consume_token(LBRACKET);
@@ -1113,12 +1416,12 @@ n7 = new NodeListOptional();
 n5 = new NodeSequence(2);
         n6 = VariableInitializer();
 n5.addNode(n6);
-        label_10:
+        label_13:
         while (true) {
-          if (jj_2_11(2)) {
+          if (jj_2_12(2)) {
             ;
           } else {
-            break label_10;
+            break label_13;
           }
 n8 = new NodeSequence(2);
           n10 = jj_consume_token(COMMA);
@@ -1134,7 +1437,7 @@ n4.addNode(n5);
         break;
         }
       default:
-        jj_la1[28] = jj_gen;
+        jj_la1[36] = jj_gen;
         ;
       }
 n1.addNode(n4);
@@ -1146,7 +1449,7 @@ n12.addNode(n13);
         break;
         }
       default:
-        jj_la1[29] = jj_gen;
+        jj_la1[37] = jj_gen;
         ;
       }
 n1.addNode(n12);
@@ -1179,314 +1482,11 @@ n0 = new NodeChoice(n17, 1);
       break;
       }
     default:
-      jj_la1[30] = jj_gen;
+      jj_la1[38] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
 {if ("" != null) return new VariableInitializer(n0);}
-    throw new Error("Missing return statement in function");
-}
-
-  final public MethodDeclaration MethodDeclaration() throws ParseException {NodeListOptional n0 = new NodeListOptional();
-   NodeChoice n1;
-   NodeToken n2;
-   Token n3;
-   NodeToken n4;
-   Token n5;
-   NodeToken n6;
-   Token n7;
-   NodeToken n8;
-   Token n9;
-   NodeToken n10;
-   Token n11;
-   NodeToken n12;
-   Token n13;
-   NodeToken n14;
-   Token n15;
-   NodeToken n16;
-   Token n17;
-   ResultType n18;
-   MethodDeclarator n19;
-   NodeOptional n20 = new NodeOptional();
-   NodeSequence n21;
-   NodeToken n22;
-   Token n23;
-   NameList n24;
-   NodeChoice n25;
-   Block n26;
-   NodeToken n27;
-   Token n28;
-
-   printDebugInfo("MethodDeclaration");
-    label_11:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case ABSTRACT:
-      case FINAL:
-      case NATIVE:
-      case PRIVATE:
-      case PROTECTED:
-      case PUBLIC:
-      case STATIC:
-      case SYNCHRONIZED:{
-        ;
-        break;
-        }
-      default:
-        jj_la1[31] = jj_gen;
-        break label_11;
-      }
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case PUBLIC:{
-        n3 = jj_consume_token(PUBLIC);
-n2 = JTBToolkit.makeNodeToken(n3);
-n1 = new NodeChoice(n2, 0);
-        break;
-        }
-      case PROTECTED:{
-        n5 = jj_consume_token(PROTECTED);
-n4 = JTBToolkit.makeNodeToken(n5);
-n1 = new NodeChoice(n4, 1);
-        break;
-        }
-      case PRIVATE:{
-        n7 = jj_consume_token(PRIVATE);
-n6 = JTBToolkit.makeNodeToken(n7);
-n1 = new NodeChoice(n6, 2);
-        break;
-        }
-      case STATIC:{
-        n9 = jj_consume_token(STATIC);
-n8 = JTBToolkit.makeNodeToken(n9);
-n1 = new NodeChoice(n8, 3);
-        break;
-        }
-      case ABSTRACT:{
-        n11 = jj_consume_token(ABSTRACT);
-n10 = JTBToolkit.makeNodeToken(n11);
-n1 = new NodeChoice(n10, 4);
-        break;
-        }
-      case FINAL:{
-        n13 = jj_consume_token(FINAL);
-n12 = JTBToolkit.makeNodeToken(n13);
-n1 = new NodeChoice(n12, 5);
-        break;
-        }
-      case NATIVE:{
-        n15 = jj_consume_token(NATIVE);
-n14 = JTBToolkit.makeNodeToken(n15);
-n1 = new NodeChoice(n14, 6);
-        break;
-        }
-      case SYNCHRONIZED:{
-        n17 = jj_consume_token(SYNCHRONIZED);
-n16 = JTBToolkit.makeNodeToken(n17);
-n1 = new NodeChoice(n16, 7);
-        break;
-        }
-      default:
-        jj_la1[32] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-n0.addNode(n1);
-    }
-n0.nodes.trimToSize();
-    n18 = ResultType();
-    n19 = MethodDeclarator();
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case THROWS:{
-n21 = new NodeSequence(2);
-      n23 = jj_consume_token(THROWS);
-n22 = JTBToolkit.makeNodeToken(n23);
-n21.addNode(n22);
-      n24 = NameList();
-n21.addNode(n24);
-n20.addNode(n21);
-      break;
-      }
-    default:
-      jj_la1[33] = jj_gen;
-      ;
-    }
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case LBRACE:{
-      n26 = Block();
-n25 = new NodeChoice(n26, 0);
-      break;
-      }
-    case SEMICOLON:{
-      n28 = jj_consume_token(SEMICOLON);
-n27 = JTBToolkit.makeNodeToken(n28);
-n25 = new NodeChoice(n27, 1);
-      break;
-      }
-    default:
-      jj_la1[34] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-{if ("" != null) return new MethodDeclaration(n0,n18,n19,n20,n25);}
-    throw new Error("Missing return statement in function");
-}
-
-  final public MethodDeclarator MethodDeclarator() throws ParseException {NodeToken n0;
-   Token n1;
-   FormalParameters n2;
-   NodeListOptional n3 = new NodeListOptional();
-   NodeSequence n4;
-   NodeToken n5;
-   Token n6;
-   NodeToken n7;
-   Token n8;
-
-   printDebugInfo("MethodDeclarator");
-    n1 = jj_consume_token(IDENTIFIER);
-n0 = JTBToolkit.makeNodeToken(n1);
-    n2 = FormalParameters();
-    label_12:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case LBRACKET:{
-        ;
-        break;
-        }
-      default:
-        jj_la1[35] = jj_gen;
-        break label_12;
-      }
-n4 = new NodeSequence(2);
-      n6 = jj_consume_token(LBRACKET);
-n5 = JTBToolkit.makeNodeToken(n6);
-n4.addNode(n5);
-      n8 = jj_consume_token(RBRACKET);
-n7 = JTBToolkit.makeNodeToken(n8);
-n4.addNode(n7);
-n3.addNode(n4);
-    }
-n3.nodes.trimToSize();
-{if ("" != null) return new MethodDeclarator(n0,n2,n3);}
-    throw new Error("Missing return statement in function");
-}
-
-  final public FormalParameters FormalParameters() throws ParseException {NodeToken n0;
-   Token n1;
-   NodeOptional n2 = new NodeOptional();
-   NodeSequence n3;
-   FormalParameter n4;
-   NodeListOptional n5;
-   NodeSequence n6;
-   NodeToken n7;
-   Token n8;
-   FormalParameter n9;
-   NodeToken n10;
-   Token n11;
-    n1 = jj_consume_token(LPAREN);
-n0 = JTBToolkit.makeNodeToken(n1);
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case BOOLEAN:
-    case BYTE:
-    case CHAR:
-    case DOUBLE:
-    case FLOAT:
-    case INT:
-    case LONG:
-    case SHORT:
-    case IDENTIFIER:
-    case HOOK:{
-n5 = new NodeListOptional();
-n3 = new NodeSequence(2);
-      n4 = FormalParameter();
-n3.addNode(n4);
-      label_13:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-        case COMMA:{
-          ;
-          break;
-          }
-        default:
-          jj_la1[36] = jj_gen;
-          break label_13;
-        }
-n6 = new NodeSequence(2);
-        n8 = jj_consume_token(COMMA);
-n7 = JTBToolkit.makeNodeToken(n8);
-n6.addNode(n7);
-        n9 = FormalParameter();
-n6.addNode(n9);
-n5.addNode(n6);
-      }
-n5.nodes.trimToSize();
-n3.addNode(n5);
-n2.addNode(n3);
-      break;
-      }
-    default:
-      jj_la1[37] = jj_gen;
-      ;
-    }
-    n11 = jj_consume_token(RPAREN);
-n10 = JTBToolkit.makeNodeToken(n11);
-{if ("" != null) return new FormalParameters(n0,n2,n10);}
-    throw new Error("Missing return statement in function");
-}
-
-  final public FormalParameter FormalParameter() throws ParseException {NodeChoice n0;
-   NodeSequence n1;
-   Type n2;
-   NodeToken n3;
-   Token n4;
-   NodeSequence n5;
-   NodeToken n6;
-   Token n7;
-   OptionalParameter n8;
-    if (jj_2_12(3)) {
-n1 = new NodeSequence(3);
-      n2 = Type();
-n1.addNode(n2);
-      n4 = jj_consume_token(IDENTIFIER);
-n3 = JTBToolkit.makeNodeToken(n4);
-n1.addNode(n3);
-n0 = new NodeChoice(n1, 0);
-    } else {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case HOOK:{
-n5 = new NodeSequence(2);
-        n7 = jj_consume_token(HOOK);
-n6 = JTBToolkit.makeNodeToken(n7);
-n5.addNode(n6);
-        n8 = OptionalParameter();
-n5.addNode(n8);
-n0 = new NodeChoice(n5, 1);
-        break;
-        }
-      default:
-        jj_la1[38] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-    }
-{if ("" != null) return new FormalParameter(n0);}
-    throw new Error("Missing return statement in function");
-}
-
-  final public OptionalParameter OptionalParameter() throws ParseException {Type n0;
-   NodeToken n1;
-   Token n2;
-   NodeToken n3;
-   Token n4;
-   Expression n5;
-
-   printDebugInfo("OptionalParameter");
-    n0 = Type();
-    n2 = jj_consume_token(IDENTIFIER);
-n1 = JTBToolkit.makeNodeToken(n2);
-    n4 = jj_consume_token(ASSIGN);
-n3 = JTBToolkit.makeNodeToken(n4);
-    n5 = Expression();
-{if ("" != null) return new OptionalParameter(n0,n1,n3,n5);}
     throw new Error("Missing return statement in function");
 }
 
@@ -4690,16 +4690,15 @@ n13.addNode(n14);
     return false;
   }
 
-  private boolean jj_3_9()
+  private boolean jj_3R_VariableInitializer_1130_7_68()
  {
-    if (jj_3R_accessor_get_declaration_790_4_49()) return true;
+    if (jj_scan_token(LBRACE)) return true;
     return false;
   }
 
-  private boolean jj_3_12()
+  private boolean jj_3_9()
  {
-    if (jj_3R_Type_1321_4_51()) return true;
-    if (jj_scan_token(IDENTIFIER)) return true;
+    if (jj_3R_accessor_get_declaration_790_4_49()) return true;
     return false;
   }
 
@@ -4707,6 +4706,17 @@ n13.addNode(n14);
  {
     if (jj_scan_token(LBRACKET)) return true;
     if (jj_scan_token(RBRACKET)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_VariableInitializer_1129_4_51()
+ {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_VariableInitializer_1130_7_68()) {
+    jj_scanpos = xsp;
+    if (jj_3R_VariableInitializer_1161_7_69()) return true;
+    }
     return false;
   }
 
@@ -5068,6 +5078,13 @@ n13.addNode(n14);
     return false;
   }
 
+  private boolean jj_3_11()
+ {
+    if (jj_3R_Type_1321_4_50()) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
   private boolean jj_3R_CastLookahead_2179_13_123()
  {
     if (jj_scan_token(IDENTIFIER)) return true;
@@ -5089,13 +5106,13 @@ n13.addNode(n14);
   private boolean jj_3R_InstanceOfExpression_1795_7_165()
  {
     if (jj_scan_token(INSTANCEOF)) return true;
-    if (jj_3R_Type_1321_4_51()) return true;
+    if (jj_3R_Type_1321_4_50()) return true;
     return false;
   }
 
   private boolean jj_3R_ResultType_1410_7_105()
  {
-    if (jj_3R_Type_1321_4_51()) return true;
+    if (jj_3R_Type_1321_4_50()) return true;
     return false;
   }
 
@@ -5407,7 +5424,7 @@ n13.addNode(n14);
     return false;
   }
 
-  private boolean jj_3R_Type_1332_7_69()
+  private boolean jj_3R_Type_1332_7_67()
  {
     if (jj_scan_token(LBRACKET)) return true;
     if (jj_scan_token(RBRACKET)) return true;
@@ -5420,13 +5437,7 @@ n13.addNode(n14);
     return false;
   }
 
-  private boolean jj_3R_VariableInitializer_947_7_66()
- {
-    if (jj_3R_Expression_1481_4_45()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_Type_1326_10_68()
+  private boolean jj_3R_Type_1326_10_66()
  {
     if (jj_3R_Name_1431_4_43()) return true;
     return false;
@@ -5438,7 +5449,7 @@ n13.addNode(n14);
     return false;
   }
 
-  private boolean jj_3R_Type_1323_10_67()
+  private boolean jj_3R_Type_1323_10_65()
  {
     if (jj_3R_PrimitiveType_1367_4_56()) return true;
     return false;
@@ -5463,17 +5474,17 @@ n13.addNode(n14);
     return false;
   }
 
-  private boolean jj_3R_Type_1321_4_51()
+  private boolean jj_3R_Type_1321_4_50()
  {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_Type_1323_10_67()) {
+    if (jj_3R_Type_1323_10_65()) {
     jj_scanpos = xsp;
-    if (jj_3R_Type_1326_10_68()) return true;
+    if (jj_3R_Type_1326_10_66()) return true;
     }
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3R_Type_1332_7_69()) { jj_scanpos = xsp; break; }
+      if (jj_3R_Type_1332_7_67()) { jj_scanpos = xsp; break; }
     }
     return false;
   }
@@ -5504,13 +5515,6 @@ n13.addNode(n14);
   private boolean jj_3R_Literal_2464_7_141()
  {
     if (jj_3R_BooleanLiteral_2485_4_146()) return true;
-    return false;
-  }
-
-  private boolean jj_3_11()
- {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_VariableInitializer_915_4_50()) return true;
     return false;
   }
 
@@ -5564,12 +5568,6 @@ n13.addNode(n14);
     return false;
   }
 
-  private boolean jj_3R_VariableInitializer_916_7_65()
- {
-    if (jj_scan_token(LBRACE)) return true;
-    return false;
-  }
-
   private boolean jj_3R_Literal_2451_4_130()
  {
     Token xsp;
@@ -5604,17 +5602,6 @@ n13.addNode(n14);
  {
     if (jj_scan_token(BIT_OR)) return true;
     if (jj_3R_ExclusiveOrExpression_1703_4_152()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_VariableInitializer_915_4_50()
- {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_VariableInitializer_916_7_65()) {
-    jj_scanpos = xsp;
-    if (jj_3R_VariableInitializer_947_7_66()) return true;
-    }
     return false;
   }
 
@@ -5684,7 +5671,7 @@ n13.addNode(n14);
 
   private boolean jj_3_24()
  {
-    if (jj_3R_Type_1321_4_51()) return true;
+    if (jj_3R_Type_1321_4_50()) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
@@ -6078,7 +6065,7 @@ n13.addNode(n14);
 
   private boolean jj_3_26()
  {
-    if (jj_3R_Type_1321_4_51()) return true;
+    if (jj_3R_Type_1321_4_50()) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
@@ -6225,6 +6212,12 @@ n13.addNode(n14);
     return false;
   }
 
+  private boolean jj_3R_VariableInitializer_1161_7_69()
+ {
+    if (jj_3R_Expression_1481_4_45()) return true;
+    return false;
+  }
+
   private boolean jj_3R_AssignmentOperator_1544_7_75()
  {
     if (jj_scan_token(STARASSIGN)) return true;
@@ -6321,6 +6314,13 @@ n13.addNode(n14);
     return false;
   }
 
+  private boolean jj_3_12()
+ {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_VariableInitializer_1129_4_51()) return true;
+    return false;
+  }
+
   private boolean jj_3R_AdditiveExpression_1912_4_170()
  {
     if (jj_3R_MultiplicativeExpression_1952_4_176()) return true;
@@ -6355,16 +6355,16 @@ n13.addNode(n14);
 	   jj_la1_init_3();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x0,0x0,0x2010200,0x0,0x200,0x2000200,0x2000200,0x800000,0x80000000,0xa209600,0x8209600,0x2000200,0x2000200,0x200,0x200,0x800000,0xa209600,0x8209600,0x200,0x200,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1000000,0x0,0x1000000,0x2000200,0x2000200,0x0,0x0,0x0,0x0,0x8209400,0x0,0x0,0x0,0x0,0x59349c00,0x0,0x8209400,0x0,0x8209400,0x8209400,0x0,0x1000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1000000,0x0,0x0,0x1000000,0x1000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1000000,0x0,0x1000000,0x1000000,0x1000000,0x0,0x0,0x0,0x51140800,0x59349c00,0x51140800,0x0,0x0,0x1000000,0x82000,0x59349c00,0x82000,0x400000,0x9209400,0x1000000,0x1000000,0x1000000,0x0,0x0,0x0,0x1000000,0x4000,0x4000000,};
+	   jj_la1_0 = new int[] {0x0,0x0,0x2010200,0x0,0x200,0x2000200,0x2000200,0x800000,0x80000000,0xa209600,0x8209600,0x2000200,0x2000200,0x200,0x200,0x800000,0xa209600,0x8209600,0x200,0x200,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x2000200,0x2000200,0x0,0x0,0x0,0x0,0x8209400,0x0,0x0,0x1000000,0x0,0x1000000,0x0,0x0,0x0,0x59349c00,0x0,0x8209400,0x0,0x8209400,0x8209400,0x0,0x1000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1000000,0x0,0x0,0x1000000,0x1000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1000000,0x0,0x1000000,0x1000000,0x1000000,0x0,0x0,0x0,0x51140800,0x59349c00,0x51140800,0x0,0x0,0x1000000,0x82000,0x59349c00,0x82000,0x400000,0x9209400,0x1000000,0x1000000,0x1000000,0x0,0x0,0x0,0x1000000,0x4000,0x4000000,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x100,0x1,0x808,0x0,0x808,0x800,0x800,0x0,0x0,0x1026e74,0x6e54,0x24e20,0x24e20,0x800,0x800,0x0,0x1026e74,0x6e54,0x4e40,0x4e40,0x0,0x0,0xa00,0xa00,0xa00,0xa00,0x0,0x0,0x204480c0,0x0,0x204480c0,0x24e20,0x24e20,0x100000,0x0,0x0,0x0,0x2014,0x0,0xe00,0xe00,0x100000,0x24cfb0d4,0x48000,0x2014,0x0,0x2014,0x1002014,0x0,0x204480c0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x204480c0,0x0,0x0,0x204480c0,0x204480c0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x204480c0,0x0,0x20400080,0x400000,0x204480c0,0x0,0x0,0x40,0x24cf90c0,0x24cfb0d4,0x24cf90c0,0x0,0x0,0x204480c0,0x0,0x24cfb0d4,0x0,0x0,0x2044a0d4,0x204480c0,0x204480c0,0x204480c0,0x0,0x0,0x0,0x204480c0,0x0,0x0,};
+	   jj_la1_1 = new int[] {0x100,0x1,0x808,0x0,0x808,0x800,0x800,0x0,0x0,0x1026e74,0x6e54,0x24e20,0x24e20,0x800,0x800,0x0,0x1026e74,0x6e54,0x4e40,0x4e40,0x0,0x0,0xa00,0xa00,0xa00,0xa00,0x0,0x24e20,0x24e20,0x100000,0x0,0x0,0x0,0x2014,0x0,0x0,0x204480c0,0x0,0x204480c0,0xe00,0xe00,0x100000,0x24cfb0d4,0x48000,0x2014,0x0,0x2014,0x1002014,0x0,0x204480c0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x204480c0,0x0,0x0,0x204480c0,0x204480c0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x204480c0,0x0,0x20400080,0x400000,0x204480c0,0x0,0x0,0x40,0x24cf90c0,0x24cfb0d4,0x24cf90c0,0x0,0x0,0x204480c0,0x0,0x24cfb0d4,0x0,0x0,0x2044a0d4,0x204480c0,0x204480c0,0x204480c0,0x0,0x0,0x0,0x204480c0,0x0,0x0,};
 	}
 	private static void jj_la1_init_2() {
-	   jj_la1_2 = new int[] {0x0,0x0,0x4000,0x10000,0x4000,0x0,0x0,0x0,0x0,0x4020,0x4020,0x0,0x0,0x0,0x0,0x0,0x20,0x20,0x0,0x0,0x4400,0x4400,0x0,0x0,0x0,0x0,0x20000,0x1000,0xc030053a,0x8000,0xc030053a,0x0,0x0,0x0,0x4400,0x1000,0x8000,0x400020,0x400000,0x0,0x0,0x0,0xc000453a,0x0,0x20,0x1000,0x0,0x20,0x8000,0xc030013a,0x20000,0x400000,0x10000000,0x20000000,0x0,0x0,0x0,0x9000000,0x9000000,0x0,0x60c0000,0x60c0000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xc030013a,0x300000,0x300000,0x13a,0x30013a,0x100,0xc0000000,0xc0000000,0x1000,0x1000,0x100,0x11100,0x13a,0x11100,0x1a,0x0,0xc030013a,0x8000,0x1100,0x0,0xc000453a,0xc000453a,0xc000453a,0x8000,0xc0000000,0x13a,0x0,0xc000453a,0x0,0x0,0xc000013a,0xc030013a,0xc000013a,0xc000013a,0x8000,0x20,0x20,0xc030013a,0x0,0x0,};
+	   jj_la1_2 = new int[] {0x0,0x0,0x4000,0x10000,0x4000,0x0,0x0,0x0,0x0,0x4020,0x4020,0x0,0x0,0x0,0x0,0x0,0x20,0x20,0x0,0x0,0x4400,0x4400,0x0,0x0,0x0,0x0,0x20000,0x0,0x0,0x0,0x4400,0x1000,0x8000,0x400020,0x400000,0x1000,0xc030053a,0x8000,0xc030053a,0x0,0x0,0x0,0xc000453a,0x0,0x20,0x1000,0x0,0x20,0x8000,0xc030013a,0x20000,0x400000,0x10000000,0x20000000,0x0,0x0,0x0,0x9000000,0x9000000,0x0,0x60c0000,0x60c0000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xc030013a,0x300000,0x300000,0x13a,0x30013a,0x100,0xc0000000,0xc0000000,0x1000,0x1000,0x100,0x11100,0x13a,0x11100,0x1a,0x0,0xc030013a,0x8000,0x1100,0x0,0xc000453a,0xc000453a,0xc000453a,0x8000,0xc0000000,0x13a,0x0,0xc000453a,0x0,0x0,0xc000013a,0xc030013a,0xc000013a,0xc000013a,0x8000,0x20,0x20,0xc030013a,0x0,0x0,};
 	}
 	private static void jj_la1_init_3() {
-	   jj_la1_3 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x0,0x3,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x3ff800,0x0,0x0,0x0,0x20,0x40,0x10,0x0,0x0,0x0,0x0,0x0,0x700,0x700,0x3,0x3,0x8c,0x8c,0x3,0x3,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x0,0x0,0x0,0x0,0x0,0x3,0x0,0x0,};
+	   jj_la1_3 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x0,0x3,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x3ff800,0x0,0x0,0x0,0x20,0x40,0x10,0x0,0x0,0x0,0x0,0x0,0x700,0x700,0x3,0x3,0x8c,0x8c,0x3,0x3,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x0,0x0,0x0,0x0,0x0,0x3,0x0,0x0,};
 	}
   final private JJCalls[] jj_2_rtns = new JJCalls[26];
   private boolean jj_rescan = false;
