@@ -1,0 +1,5 @@
+public class DomCard {
+  public static void funcTest(String firstArgument, ?String secondArgument = "Hello", ?String thirdArgument = "There", ?String fourthArgument = "dude") {
+    System.out.println(firstArgument + " - " + secondArgument + " - " + thirdArgument + " - " + fourthArgument);
+  }
+} 

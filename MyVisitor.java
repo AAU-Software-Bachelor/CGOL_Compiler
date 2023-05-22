@@ -22,8 +22,8 @@ public class MyVisitor extends DepthFirstVisitor {
    private boolean methodOptional = false;
 
    private FieldDecoration currentField = null;
-   //String[] spaces = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"};
-   String[] spaces = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
+   //String[] spaces = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
+   String[] spaces = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
    private boolean unary = false;
 
    private static class FieldDecoration {
@@ -88,7 +88,7 @@ public class MyVisitor extends DepthFirstVisitor {
 
    public void visit(NodeListOptional n) {
       for (Node node: n.nodes) {
-         if(methodOptional && (!output.endsWith(" ") || !output.endsWith("\n"))) output += spaces[22];
+         if(methodOptional && (!output.endsWith(" ") && !output.endsWith("\n"))) output += spaces[22];
          node.accept(this);
       }
       methodOptional = false;
@@ -130,7 +130,7 @@ public class MyVisitor extends DepthFirstVisitor {
    public void visit(ImportDeclaration n) {
       order++;
       try {
-         JavaParser parser = new JavaParser(new java.io.FileInputStream(n.f1.f0.toString() + ".cgol"));
+         JavaParser parser = new JavaParser(new java.io.FileInputStream(n.f1.f0.toString() + ".cgol3"));
          Node newDocRoot = parser.CompilationUnit();
          MyVisitor v = new MyVisitor();
          newDocRoot.accept(v);
@@ -201,7 +201,6 @@ public class MyVisitor extends DepthFirstVisitor {
       output += "\n";
    }
    public void visit(MethodDeclaration n) {
-      int i = 0;
       if(n.f0.size() > 1) methodOptional = true;
       n.f0.accept(this);
       if(!n.f0.nodes.isEmpty()) output += " ";
@@ -242,17 +241,33 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(FormalParameters n) {
+      int i = 0;
       n.f0.accept(this);
+      /*
+      if(n.f1.present()) {
+         Vector<Node> a = ((NodeSequence)n.f1.node).nodes;
+         a.get(0).accept(this);
+         output += " ";
+         a.get(1).accept(this);
+      }*/
       n.f1.accept(this);
       n.f2.accept(this);
    }
 
    public void visit(FormalParameter n) {
-      Vector<Node> a = ((NodeSequence)n.f0.choice).nodes;
-      a.get(0).accept(this);
-      output += spaces[24];
-      a.get(1).accept(this);
+
+      n.f0.accept(this);
+      /*
+      if(n.f0.present()) {
+         Vector<Node> a = ((NodeSequence)n.f0.node).nodes;
+         a.get(0).accept(this);
+         output += " ";
+         a.get(1).accept(this);
+      }*/
+      output += " ";
    }
+
+
 
    public void visit(FieldDeclaration n) {
       n.f0.accept(this);
@@ -284,6 +299,7 @@ public class MyVisitor extends DepthFirstVisitor {
       initCurrentField();
       currentField.type = n.f0.toString();
       output += n.f0.toString();
+      if(n.f1.present()) output += " ";
       n.f1.accept(this);
    }
 
@@ -473,14 +489,17 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(ConstructorDeclaration n) {
-      int i = 0;
       n.f0.accept(this);
-      if(n.f0.present() && (!output.endsWith(" ") || !output.endsWith("\n"))) output += spaces[23];
+      if(n.f0.present() && !output.endsWith(" ")) output += spaces[23];
       n.f1.accept(this);
+      n.f2.accept(this);
       n.f3.accept(this);
+      n.f4.accept(this);
+      if(n.f4.toString().equals("{") && !output.equals(" ")) output += " ";
       if(n.f4.toString().equals("{")) output += "{\n";
       n.f5.accept(this);
       n.f6.accept(this);
+      n.f7.accept(this);
       if(n.f7.toString().equals("}")) output += "}\n";
    }
 
