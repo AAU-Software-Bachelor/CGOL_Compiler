@@ -197,6 +197,12 @@ public interface GJVoidVisitor<A> {
    /**
     * f0 -> Type()
     * f1 -> <IDENTIFIER>
+    */
+   public void visit(RequiredParameter n, A argu);
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
     * f2 -> "="
     * f3 -> Expression()
     */
@@ -659,7 +665,7 @@ public interface GJVoidVisitor<A> {
    /**
     * f0 -> "try"
     * f1 -> Block()
-    * f2 -> ( "catch" "(" FormalParameter() ")" Block() )*
+    * f2 -> ( "catch" "(" RequiredParameter() ")" Block() )*
     * f3 -> [ "finally" Block() ]
     */
    public void visit(TryStatement n, A argu);

@@ -447,68 +447,73 @@ import java.io.IOException;
       ( "private" | "public" )? <SET> ";"
   }
 
-    void VariableDeclarator() :
-    {printDebugInfo("VariableDeclarator");}
-    {
-      VariableDeclaratorId() [ "=" VariableInitializer() ]
-    }
+void VariableDeclarator() :
+{printDebugInfo("VariableDeclarator");}
+{
+  VariableDeclaratorId() [ "=" VariableInitializer() ]
+}
 
-    void VariableDeclaratorId() :
-    {printDebugInfo("VariableDeclaratorId");}
-    {
-      <IDENTIFIER> ( "[" "]" )*
-    }
+void VariableDeclaratorId() :
+{printDebugInfo("VariableDeclaratorId");}
+{
+  <IDENTIFIER> ( "[" "]" )*
+}
 
-    void VariableInitializer() :
-    {printDebugInfo("VariableInit");}
-    {
-      "{" [ VariableInitializer() ( LOOKAHEAD(2) "," VariableInitializer() )* ] [ "," ] "}"
-    |
-      Expression()
-    }
+void VariableInitializer() :
+{printDebugInfo("VariableInit");}
+{
+  "{" [ VariableInitializer() ( LOOKAHEAD(2) "," VariableInitializer() )* ] [ "," ] "}"
+|
+  Expression()
+}
 
-    void MethodDeclaration() :
-    {printDebugInfo("MethodDeclaration");}
-    {
-      ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" )*
-      ResultType() MethodDeclarator() [ "throws" NameList() ]
-      ( Block() | ";" )
-    }
+void MethodDeclaration() :
+{printDebugInfo("MethodDeclaration");}
+{
+  ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" )*
+  ResultType() MethodDeclarator() [ "throws" NameList() ]
+  ( Block() | ";" )
+}
 
-    void MethodDeclarator() :
-        {printDebugInfo("MethodDeclarator");}
-        {
-          <IDENTIFIER> FormalParameters() ( "[" "]" )*
-        }
+void MethodDeclarator() :
+{printDebugInfo("MethodDeclarator");}
+{
+  <IDENTIFIER> FormalParameters() ( "[" "]" )*
+}
 
-        void FormalParameters() :
-        {}
-        {
-          "(" [ FormalParameter() ( "," FormalParameter() )* ] ")"
-        }
+void FormalParameters() :
+{}
+{
+"(" [ FormalParameter() ( "," FormalParameter() )* ] ")"
+}
 
-        void FormalParameter() :
-        {}
-        {
-        LOOKAHEAD(3)
-        Type() <IDENTIFIER>
-        |
-         "?" OptionalParameter()
-        }
+void FormalParameter() :
+{}
+{
+LOOKAHEAD(3)
+Type() <IDENTIFIER>
+|
+"?" OptionalParameter()
+}
+void RequiredParameter() :
+{}
+{
+  Type() <IDENTIFIER>
+}
 
-        void OptionalParameter() :
-        {printDebugInfo("OptionalParameter");}
-        {
-         Type() <IDENTIFIER> "=" Expression()
-        }
+void OptionalParameter() :
+{printDebugInfo("OptionalParameter");}
+{
+Type() <IDENTIFIER> "=" Expression()
+}
 
-    void DefaultValue() :
+void DefaultValue() :
     {printDebugInfo("Defaultvalue");}
     {
       Literal()
     }
 
-    void ConstructorDeclaration() :
+void ConstructorDeclaration() :
     {printDebugInfo("ConstructorDeclaration");}
     {
       [ "public" | "protected" | "private" ]
@@ -516,7 +521,7 @@ import java.io.IOException;
       "{" [ LOOKAHEAD(2) ExplicitConstructorInvocation() ] ( BlockStatement() )* "}"
     }
 
-    void ExplicitConstructorInvocation() :
+void ExplicitConstructorInvocation() :
     {}
     {
       "this" Arguments() ";"
@@ -524,7 +529,7 @@ import java.io.IOException;
       "super" Arguments() ";"
     }
 
-    void StaticInitializer() :
+void StaticInitializer() :
     {}
     {
       "static" Block()
@@ -535,13 +540,13 @@ import java.io.IOException;
      * Type, name and expression syntax follows.
      */
 
-    void Type() :
+void Type() :
     {}
     {
       ( PrimitiveType() | Name() ) ( "[" "]" )*
     }
 
-    void PrimitiveType() :
+void PrimitiveType() :
     {}
     {
       "boolean"
@@ -561,7 +566,7 @@ import java.io.IOException;
       "double"
     }
 
-    void ResultType() :
+void ResultType() :
     {}
     {
       "void"
@@ -569,7 +574,7 @@ import java.io.IOException;
       Type()
     }
 
-    void Name() :
+void Name() :
     /*
      * A lookahead of 2 is required below since "Name" can be followed
      * by a ".*" when used in the context of an "ImportDeclaration".
@@ -1039,6 +1044,6 @@ import java.io.IOException;
     {}
     {
       "try" Block()
-      ( "catch" "(" FormalParameter() ")" Block() )*
+      ( "catch" "(" RequiredParameter() ")" Block() )*
       [ "finally" Block() ]
     }

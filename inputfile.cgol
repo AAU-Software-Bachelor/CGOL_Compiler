@@ -1,5 +1,11 @@
 public class DomCard {
-  public static void funcTest(String firstArgument, ?String secondArgument = "Hello", ?String thirdArgument = "There", ?String fourthArgument = "dude") {
+   public Domcard(String firstArgument, String secondArgument, ?String thirdArgument = "There", ?double fourthArgument = 0.0, ?int fifth = 3) {
+       System.out.println(firstArgument + " - " + secondArgument + " - " + thirdArgument + " - " + fourthArgument);
+   }
+
+   /*
+  public static void funcTest(String firstArgument, String secondArgument, ?String thirdArgument = "There", ?double fourthArgument = 0.0, ?int fifth = 3) {
     System.out.println(firstArgument + " - " + secondArgument + " - " + thirdArgument + " - " + fourthArgument);
   }
-} 
+  */
+}

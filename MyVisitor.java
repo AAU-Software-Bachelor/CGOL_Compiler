@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class MyVisitor extends DepthFirstVisitor {
    public static String firstClassName = "";
@@ -20,10 +23,15 @@ public class MyVisitor extends DepthFirstVisitor {
    public String output;
    private String fileName;
    private boolean methodOptional = false;
+   private List<String> requiredParams = new ArrayList<String>();
+   private List<CustomOptionalParam> optionalParams = new ArrayList<CustomOptionalParam>();
+   private List<CustomOptionalParam> leftOutOptional = new ArrayList<CustomOptionalParam>();
+
+   private List<List<CustomOptionalParam>> paramDublicateChecker = new ArrayList<List<CustomOptionalParam>>();
 
    private FieldDecoration currentField = null;
-   //String[] spaces = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
-   String[] spaces = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
+   //String[] spaces = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27"};
+   String[] spaces = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
    private boolean unary = false;
 
    private static class FieldDecoration {
@@ -41,10 +49,18 @@ public class MyVisitor extends DepthFirstVisitor {
 
    public void visit(Block n) {
       output += " {\n";
+      addOptional();
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
       output += "}\n";
+   }
+
+   private void addOptional() {
+      for(int i = 0; i < leftOutOptional.size(); i++) {
+         output += leftOutOptional.get(i).toString() + ";\n";
+      }
+      leftOutOptional.clear();
    }
 
    public void visit(ReturnStatement n) {
@@ -201,16 +217,149 @@ public class MyVisitor extends DepthFirstVisitor {
       output += "\n";
    }
    public void visit(MethodDeclaration n) {
-      if(n.f0.size() > 1) methodOptional = true;
-      n.f0.accept(this);
-      if(!n.f0.nodes.isEmpty()) output += " ";
-      n.f1.accept(this);
-      output += " ";
-      n.f2.accept(this);
-      if(n.f3.present()) output += " ";
-      n.f3.accept(this);
-      if(n.f3.present()) output += " ";
-      n.f4.accept(this);
+      int k = 0;
+      if(n.f2.f1.f1.node instanceof NodeSequence) {
+         Vector<Node> params = ((NodeSequence)n.f2.f1.f1.node).nodes;
+         if(params.get(0) instanceof FormalParameter && ((FormalParameter)params.get(0)).f0.choice instanceof NodeSequence) {
+            Vector<Node> firstArgument = ((NodeSequence)((FormalParameter)params.get(0)).f0.choice).nodes;
+            String param = ((Name)((Type)firstArgument.get(0)).f0.choice).f0.toString();
+            param += " " + firstArgument.get(1).toString();
+            requiredParams.add(param);
+         }
+         if(((NodeListOptional)params.get(1)).present()) {
+            for (Node node: ((NodeListOptional)params.get(1)).nodes) {
+               Node temp = node;
+               Vector<Node> argument = ((NodeSequence)((FormalParameter)((NodeSequence)node).nodes.get(1)).f0.choice).nodes;
+               if(!(argument.get(1) instanceof OptionalParameter)) {
+                  String param = ((Name)((Type)argument.get(0)).f0.choice).f0.toString();
+                  param += " " + argument.get(1).toString();
+                  requiredParams.add(param);
+               } else {
+                  String Type;
+                  String Name;
+                  if(((OptionalParameter) argument.get(1)).f0.f0.choice instanceof PrimitiveType) {
+                     int i = 0;
+                     Type = ((NodeToken)((PrimitiveType)((OptionalParameter) argument.get(1)).f0.f0.choice).f0.choice).toString();
+                     Name = ((OptionalParameter) argument.get(1)).f1.toString();
+                  } else {
+                     int i = 0;
+                     Type = ((Name) ((OptionalParameter) argument.get(1)).f0.f0.choice).f0.toString();
+                     Name = ((OptionalParameter) argument.get(1)).f1.toString();
+                  }
+                  //This is so effing dumb and should not be used, but oh well, no time
+                  String outputSave = output;
+                  ((OptionalParameter)argument.get(1)).f3.accept(this);
+                  String Expression = output.substring(outputSave.length()).trim();
+                  output = outputSave;
+
+                  optionalParams.add(new CustomOptionalParam(Type, Name, Expression));
+               }
+            }
+         }
+
+         String finalParams = concatParams(requiredParams);
+
+         for(int i = 0; i < (optionalParams.size()*optionalParams.size() - 1); i++) {
+            String bin = Integer.toBinaryString(i);
+            bin = String.format("%1$" + 16 + "s", bin).replace(' ', '0');
+            System.out.println(bin);
+            List<CustomOptionalParam> optinalParamsString = new ArrayList<CustomOptionalParam>();
+
+
+            for(int p = 0; p < 16; p++) {
+               if(bin.charAt(p) == '1') {
+                  optinalParamsString.add(optionalParams.get(15 - p));
+               } else {
+                  if(16 - p <= optionalParams.size()) {
+                     leftOutOptional.add(optionalParams.get(15 - p));
+                  }
+               }
+            }
+
+            if(!isDublicate(optinalParamsString)) {
+               paramDublicateChecker.add(optinalParamsString);
+               if(n.f0.present() && n.f0.nodes.size() > 1) methodOptional = true;
+               n.f0.accept(this);
+               if(n.f0.present()) {
+                  output += spaces[24];
+               }
+               n.f1.accept(this);
+
+               String finalestParams = concatParams(requiredParams);
+
+
+
+               if(!finalParams.isEmpty() && !optinalParamsString.isEmpty()) finalestParams += ", ";
+               finalestParams += concatOptionalParams(optinalParamsString);
+
+               output += " " + n.f2.f0.toString() + "(" + finalestParams + ") ";
+
+               n.f3.accept(this);
+               if(n.f3.present()) output += spaces[25];
+               n.f4.accept(this);
+               System.out.println(concatOptionalParams(optinalParamsString));
+            } else {
+               leftOutOptional.clear();
+            }
+         }
+      }
+   }
+
+   private boolean isDublicate(List<CustomOptionalParam> params) {
+      System.out.println("Start");
+      for(int i = 0; i < paramDublicateChecker.size(); i++) {
+         boolean same = true;
+         if(paramDublicateChecker.get(i).size() == 0 ||
+            paramDublicateChecker.get(i).size() != params.size()) {
+            same = false;
+         } else {
+            for(int p = 0; p < paramDublicateChecker.get(i).size(); p++) {
+               //System.out.println(paramDublicateChecker.get(i).get(p).Type + " : " + params.get(p).Type);
+               if(!paramDublicateChecker.get(i).get(p).Type.equals(params.get(p).Type)) {
+                  same = false;
+               }
+            }
+         }
+
+         if(same) {
+            System.out.println("Same");
+            return true;
+         }
+      }
+      System.out.println("Not Same");
+      return false;
+   }
+
+   private String concatOptionalParams(List<CustomOptionalParam> params) {
+      if(params.size() > 0) {
+         String output = params.get(params.size() - 1).toParamString();
+         for(int i = (params.size() - 2); i >= 0; i--) {
+            output += ", " + params.get(i).toParamString();
+         }
+         return output;
+      }
+      return "";
+   }
+   private String concatOptional(List<CustomOptionalParam> params) {
+      if(params.size() > 0) {
+         String output = params.get(0).toString();
+         for(int i = 1; i < params.size(); i++) {
+            output += "\n" + params.get(i).toString();
+         }
+         return output;
+      }
+      return "";
+   }
+
+   private String concatParams(List<String> params) {
+      if(params.size() > 0) {
+         String output = params.get(0);
+         for (int i = 1; i < params.size(); i++) {
+            output += ", " + params.get(i);
+         }
+         return output;
+      }
+      return "";
    }
    public void visit(MethodDeclarator n) {
       int i = 0;
@@ -250,22 +399,13 @@ public class MyVisitor extends DepthFirstVisitor {
          output += " ";
          a.get(1).accept(this);
       }*/
-      n.f1.accept(this);
-      n.f2.accept(this);
-   }
 
+   }
+/*
    public void visit(FormalParameter n) {
-
       n.f0.accept(this);
-      /*
-      if(n.f0.present()) {
-         Vector<Node> a = ((NodeSequence)n.f0.node).nodes;
-         a.get(0).accept(this);
-         output += " ";
-         a.get(1).accept(this);
-      }*/
       output += " ";
-   }
+   }*/
 
 
 
@@ -273,7 +413,7 @@ public class MyVisitor extends DepthFirstVisitor {
       n.f0.accept(this);
       if(n.f0.present()) output += spaces[16];
       n.f1.accept(this);
-      output += " ";
+      output += spaces[26];
       initCurrentField();
       currentField.name = n.f2.toString();
 
@@ -299,7 +439,7 @@ public class MyVisitor extends DepthFirstVisitor {
       initCurrentField();
       currentField.type = n.f0.toString();
       output += n.f0.toString();
-      if(n.f1.present()) output += " ";
+      if(n.f1.present() && ((n.f1.nodes.get(0) instanceof NodeSequence && ((NodeSequence) n.f1.nodes.get(0)).nodes.get(0) instanceof NodeToken) && ((NodeSequence) n.f1.nodes.get(0)).nodes.get(0).toString() != ".")) output += spaces[27];
       n.f1.accept(this);
    }
 
@@ -489,6 +629,8 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(ConstructorDeclaration n) {
+      int h = 0;
+      /*
       n.f0.accept(this);
       if(n.f0.present() && !output.endsWith(" ")) output += spaces[23];
       n.f1.accept(this);
@@ -500,7 +642,93 @@ public class MyVisitor extends DepthFirstVisitor {
       n.f5.accept(this);
       n.f6.accept(this);
       n.f7.accept(this);
-      if(n.f7.toString().equals("}")) output += "}\n";
+      if(n.f7.toString().equals("}")) output += "}\n";*/
+
+
+         if (n.f2.f1.node instanceof NodeSequence) {
+            Vector<Node> params = ((NodeSequence) n.f2.f1.node).nodes;
+            if (params.get(0) instanceof FormalParameter && ((FormalParameter) params.get(0)).f0.choice instanceof NodeSequence) {
+               Vector<Node> firstArgument = ((NodeSequence) ((FormalParameter) params.get(0)).f0.choice).nodes;
+               String param = ((Name) ((Type) firstArgument.get(0)).f0.choice).f0.toString();
+               param += " " + firstArgument.get(1).toString();
+               requiredParams.add(param);
+            }
+            if (((NodeListOptional) params.get(1)).present()) {
+               for (Node node : ((NodeListOptional) params.get(1)).nodes) {
+                  Node temp = node;
+                  Vector<Node> argument = ((NodeSequence) ((FormalParameter) ((NodeSequence) node).nodes.get(1)).f0.choice).nodes;
+                  if (!(argument.get(1) instanceof OptionalParameter)) {
+                     String param = ((Name) ((Type) argument.get(0)).f0.choice).f0.toString();
+                     param += " " + argument.get(1).toString();
+                     requiredParams.add(param);
+                  } else {
+                     String Type;
+                     String Name;
+                     if (((OptionalParameter) argument.get(1)).f0.f0.choice instanceof PrimitiveType) {
+                        int i = 0;
+                        Type = ((NodeToken) ((PrimitiveType) ((OptionalParameter) argument.get(1)).f0.f0.choice).f0.choice).toString();
+                        Name = ((OptionalParameter) argument.get(1)).f1.toString();
+                     } else {
+                        int i = 0;
+                        Type = ((Name) ((OptionalParameter) argument.get(1)).f0.f0.choice).f0.toString();
+                        Name = ((OptionalParameter) argument.get(1)).f1.toString();
+                     }
+                     //This is so effing dumb and should not be used, but oh well, no time
+                     String outputSave = output;
+                     ((OptionalParameter) argument.get(1)).f3.accept(this);
+                     String Expression = output.substring(outputSave.length()).trim();
+                     output = outputSave;
+
+                     optionalParams.add(new CustomOptionalParam(Type, Name, Expression));
+                  }
+               }
+            }
+
+            String finalParams = concatParams(requiredParams);
+
+            for (int i = 0; i < (optionalParams.size() * optionalParams.size() - 1); i++) {
+               String bin = Integer.toBinaryString(i);
+               bin = String.format("%1$" + 16 + "s", bin).replace(' ', '0');
+               System.out.println(bin);
+               List<CustomOptionalParam> optinalParamsString = new ArrayList<CustomOptionalParam>();
+
+
+               for (int p = 0; p < 16; p++) {
+                  if (bin.charAt(p) == '1') {
+                     optinalParamsString.add(optionalParams.get(15 - p));
+                  } else {
+                     if (16 - p <= optionalParams.size()) {
+                        leftOutOptional.add(optionalParams.get(15 - p));
+                     }
+                  }
+               }
+
+               if (!isDublicate(optinalParamsString)) {
+                  paramDublicateChecker.add(optinalParamsString);
+                  //if (n.f0.present() && n.f0.nodes.size() > 1) methodOptional = true;
+                  n.f0.accept(this);
+                  if (n.f0.present()) {
+                     output += spaces[24];
+                  }
+                  n.f1.accept(this);
+
+                  String finalestParams = concatParams(requiredParams);
+
+
+                  if (!finalParams.isEmpty() && !optinalParamsString.isEmpty()) finalestParams += ", ";
+                  finalestParams += concatOptionalParams(optinalParamsString);
+
+                  output += " " + n.f2.f0.toString() + finalestParams + ") ";
+
+                  n.f3.accept(this);
+                  if (n.f3.present()) output += spaces[25];
+                  n.f4.accept(this);
+                  System.out.println(concatOptionalParams(optinalParamsString));
+               } else {
+                  leftOutOptional.clear();
+               }
+            }
+         }
    }
 
    public void writeOutputToFile() throws IOException {
@@ -535,4 +763,5 @@ public class MyVisitor extends DepthFirstVisitor {
          order--;
       }
    }
+
 }

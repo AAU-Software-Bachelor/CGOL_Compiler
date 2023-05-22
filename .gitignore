@@ -2,5 +2,5 @@
 outputs/*
 out/*
 visitor/*
-syntaxtree/*
+syntaxtree/**
 release/*

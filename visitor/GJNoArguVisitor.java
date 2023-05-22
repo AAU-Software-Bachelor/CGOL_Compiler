@@ -197,6 +197,12 @@ public interface GJNoArguVisitor<R> {
    /**
     * f0 -> Type()
     * f1 -> <IDENTIFIER>
+    */
+   public R visit(RequiredParameter n);
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
     * f2 -> "="
     * f3 -> Expression()
     */
@@ -659,7 +665,7 @@ public interface GJNoArguVisitor<R> {
    /**
     * f0 -> "try"
     * f1 -> Block()
-    * f2 -> ( "catch" "(" FormalParameter() ")" Block() )*
+    * f2 -> ( "catch" "(" RequiredParameter() ")" Block() )*
     * f3 -> [ "finally" Block() ]
     */
    public R visit(TryStatement n);
