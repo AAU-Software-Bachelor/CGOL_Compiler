@@ -1,0 +1,16 @@
+package outputs;
+
+public class DomCard {
+    private String noName;
+    private String nama;
+    public String getNama() { return nama; }
+    int i = 0;
+    public String dumbass = "asdasd";
+    public void hello(String input, int input2) throws IOException, FileNotFoundException {
+        switch(i) {
+            case 0:
+                int p= 0breakcase 0:
+                int p= 2break
+        }
+    }
+}
