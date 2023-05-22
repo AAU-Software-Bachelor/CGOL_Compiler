@@ -349,13 +349,36 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
    }
 
    /**
-    * f0 -> Type()
-    * f1 -> VariableDeclaratorId()
+    * f0 -> Type() <IDENTIFIER>
+    *       | "?" OptionalParameter()
     */
    public R visit(FormalParameter n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
+      return _ret;
+   }
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    * f2 -> "="
+    * f3 -> Expression()
+    */
+   public R visit(OptionalParameter n, A argu) {
+      R _ret=null;
+      n.f0.accept(this, argu);
       n.f1.accept(this, argu);
+      n.f2.accept(this, argu);
+      n.f3.accept(this, argu);
+      return _ret;
+   }
+
+   /**
+    * f0 -> Literal()
+    */
+   public R visit(DefaultValue n, A argu) {
+      R _ret=null;
+      n.f0.accept(this, argu);
       return _ret;
    }
 

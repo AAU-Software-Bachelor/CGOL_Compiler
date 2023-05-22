@@ -22,8 +22,8 @@ public class MyVisitor extends DepthFirstVisitor {
    private boolean methodOptional = false;
 
    private FieldDecoration currentField = null;
-   String[] spaces = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
-   //String[] spaces = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
+   //String[] spaces = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"};
+   String[] spaces = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
    private boolean unary = false;
 
    private static class FieldDecoration {
@@ -88,7 +88,7 @@ public class MyVisitor extends DepthFirstVisitor {
 
    public void visit(NodeListOptional n) {
       for (Node node: n.nodes) {
-         if(methodOptional && !output.endsWith(" ")) output += spaces[22];
+         if(methodOptional && (!output.endsWith(" ") || !output.endsWith("\n"))) output += spaces[22];
          node.accept(this);
       }
       methodOptional = false;
@@ -201,6 +201,7 @@ public class MyVisitor extends DepthFirstVisitor {
       output += "\n";
    }
    public void visit(MethodDeclaration n) {
+      int i = 0;
       if(n.f0.size() > 1) methodOptional = true;
       n.f0.accept(this);
       if(!n.f0.nodes.isEmpty()) output += " ";
@@ -247,9 +248,10 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(FormalParameter n) {
-      n.f0.accept(this);
-      output += " ";
-      n.f1.accept(this);
+      Vector<Node> a = ((NodeSequence)n.f0.choice).nodes;
+      a.get(0).accept(this);
+      output += spaces[24];
+      a.get(1).accept(this);
    }
 
    public void visit(FieldDeclaration n) {
@@ -475,7 +477,6 @@ public class MyVisitor extends DepthFirstVisitor {
       n.f0.accept(this);
       if(n.f0.present() && (!output.endsWith(" ") || !output.endsWith("\n"))) output += spaces[23];
       n.f1.accept(this);
-      n.f2.accept(this);
       n.f3.accept(this);
       if(n.f4.toString().equals("{")) output += "{\n";
       n.f5.accept(this);

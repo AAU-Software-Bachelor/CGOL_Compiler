@@ -14,8 +14,10 @@ import java.util.Vector;
 
 public class JavaParser 
 {
-   static void printDebugInfo(String productionName)
+   public void printDebugInfo(String productionName)
    {
+      Token t = this.getToken(1);
+      System.err.println("Parsing " + productionName+ " at line "+ t.beginLine+ ", column "+ t.beginColumn);
    }
    public static void main(String args[])
    {
@@ -1110,16 +1112,69 @@ FormalParameters FormalParameters() :
 
 FormalParameter FormalParameter() :
 {
-   Type n0;
-   VariableDeclaratorId n1;
+   NodeChoice n0;
+   NodeSequence n1;
+   Type n2;
+   NodeToken n3;
+   Token n4;
+   NodeSequence n5;
+   NodeToken n6;
+   Token n7;
+   OptionalParameter n8;
 
-   printDebugInfo("FormalParameter");
+   
+}
+{
+   (
+      LOOKAHEAD(3)
+      { n1 = new NodeSequence(3); }
+      n2=Type()
+      { n1.addNode(n2); }
+      n4=<IDENTIFIER> { n3 = JTBToolkit.makeNodeToken(n4); }
+      { n1.addNode(n3); }
+      { n0 = new NodeChoice(n1, 0); }
+   |
+      { n5 = new NodeSequence(2); }
+      n7="?" { n6 = JTBToolkit.makeNodeToken(n7); }
+      { n5.addNode(n6); }
+      n8=OptionalParameter()
+      { n5.addNode(n8); }
+      { n0 = new NodeChoice(n5, 1); }
+   )
+   
+   { return new FormalParameter(n0); }
+}
+
+OptionalParameter OptionalParameter() :
+{
+   Type n0;
+   NodeToken n1;
+   Token n2;
+   NodeToken n3;
+   Token n4;
+   Expression n5;
+
+   printDebugInfo("OptionalParameter");
 }
 {
    n0=Type()
-   n1=VariableDeclaratorId()
+   n2=<IDENTIFIER> { n1 = JTBToolkit.makeNodeToken(n2); }
+   n4="=" { n3 = JTBToolkit.makeNodeToken(n4); }
+   n5=Expression()
    
-   { return new FormalParameter(n0,n1); }
+   { return new OptionalParameter(n0,n1,n3,n5); }
+}
+
+DefaultValue DefaultValue() :
+{
+   Literal n0;
+
+   printDebugInfo("Defaultvalue");
+}
+{
+   n0=Literal()
+   
+   { return new DefaultValue(n0); }
 }
 
 ConstructorDeclaration ConstructorDeclaration() :

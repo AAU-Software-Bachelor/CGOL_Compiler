@@ -297,12 +297,31 @@ public class GJVoidDepthFirst<A> implements GJVoidVisitor<A> {
    }
 
    /**
-    * f0 -> Type()
-    * f1 -> VariableDeclaratorId()
+    * f0 -> Type() <IDENTIFIER>
+    *       | "?" OptionalParameter()
     */
    public void visit(FormalParameter n, A argu) {
       n.f0.accept(this, argu);
+   }
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    * f2 -> "="
+    * f3 -> Expression()
+    */
+   public void visit(OptionalParameter n, A argu) {
+      n.f0.accept(this, argu);
       n.f1.accept(this, argu);
+      n.f2.accept(this, argu);
+      n.f3.accept(this, argu);
+   }
+
+   /**
+    * f0 -> Literal()
+    */
+   public void visit(DefaultValue n, A argu) {
+      n.f0.accept(this, argu);
    }
 
    /**

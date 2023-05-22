@@ -36,11 +36,10 @@
 import java.io.IOException;
 
   public class JavaParser {
-  static void printDebugInfo(String productionName) {
-//      Token t = getToken(1);
-//      System.err.println("Parsing " + productionName + " at line " + t.beginLine + ", column " + t.beginColumn);
-
-    }
+    public void printDebugInfo(String productionName) {
+      Token t = this.getToken(1);
+      System.err.println("Parsing " + productionName + " at line " + t.beginLine + ", column " + t.beginColumn);
+  }
     public static void main(String args[]) {
       JavaParser parser;
       if (args.length == 0) {
@@ -477,21 +476,36 @@ import java.io.IOException;
     }
 
     void MethodDeclarator() :
-    {printDebugInfo("MethodDeclarator");}
-    {
-      <IDENTIFIER> FormalParameters() ( "[" "]" )*
-    }
+        {printDebugInfo("MethodDeclarator");}
+        {
+          <IDENTIFIER> FormalParameters() ( "[" "]" )*
+        }
 
-    void FormalParameters() :
-    {}
-    {
-      "(" [ FormalParameter() ( "," FormalParameter() )* ] ")"
-    }
+        void FormalParameters() :
+        {}
+        {
+          "(" [ FormalParameter() ( "," FormalParameter() )* ] ")"
+        }
 
-    void FormalParameter() :
-    {printDebugInfo("FormalParameter");}
+        void FormalParameter() :
+        {}
+        {
+        LOOKAHEAD(3)
+        Type() <IDENTIFIER>
+        |
+         "?" OptionalParameter()
+        }
+
+        void OptionalParameter() :
+        {printDebugInfo("OptionalParameter");}
+        {
+         Type() <IDENTIFIER> "=" Expression()
+        }
+
+    void DefaultValue() :
+    {printDebugInfo("Defaultvalue");}
     {
-      Type() VariableDeclaratorId()
+      Literal()
     }
 
     void ConstructorDeclaration() :

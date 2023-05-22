@@ -189,10 +189,23 @@ public interface GJNoArguVisitor<R> {
    public R visit(FormalParameters n);
 
    /**
-    * f0 -> Type()
-    * f1 -> VariableDeclaratorId()
+    * f0 -> Type() <IDENTIFIER>
+    *       | "?" OptionalParameter()
     */
    public R visit(FormalParameter n);
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    * f2 -> "="
+    * f3 -> Expression()
+    */
+   public R visit(OptionalParameter n);
+
+   /**
+    * f0 -> Literal()
+    */
+   public R visit(DefaultValue n);
 
    /**
     * f0 -> [ "public" | "protected" | "private" ]

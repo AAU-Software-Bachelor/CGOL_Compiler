@@ -189,10 +189,23 @@ public interface Visitor {
    public void visit(FormalParameters n);
 
    /**
-    * f0 -> Type()
-    * f1 -> VariableDeclaratorId()
+    * f0 -> Type() <IDENTIFIER>
+    *       | "?" OptionalParameter()
     */
    public void visit(FormalParameter n);
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    * f2 -> "="
+    * f3 -> Expression()
+    */
+   public void visit(OptionalParameter n);
+
+   /**
+    * f0 -> Literal()
+    */
+   public void visit(DefaultValue n);
 
    /**
     * f0 -> [ "public" | "protected" | "private" ]

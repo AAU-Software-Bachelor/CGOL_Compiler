@@ -189,10 +189,23 @@ public interface GJVoidVisitor<A> {
    public void visit(FormalParameters n, A argu);
 
    /**
-    * f0 -> Type()
-    * f1 -> VariableDeclaratorId()
+    * f0 -> Type() <IDENTIFIER>
+    *       | "?" OptionalParameter()
     */
    public void visit(FormalParameter n, A argu);
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    * f2 -> "="
+    * f3 -> Expression()
+    */
+   public void visit(OptionalParameter n, A argu);
+
+   /**
+    * f0 -> Literal()
+    */
+   public void visit(DefaultValue n, A argu);
 
    /**
     * f0 -> [ "public" | "protected" | "private" ]
