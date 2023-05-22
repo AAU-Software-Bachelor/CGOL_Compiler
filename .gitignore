@@ -1,2 +1,6 @@
 **/*.class
 outputs/*
+out/*
+visitor/*
+syntaxtree/*
+release/*
