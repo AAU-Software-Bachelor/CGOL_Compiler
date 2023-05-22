@@ -218,11 +218,23 @@ public class MyVisitor extends DepthFirstVisitor {
    }
    public void visit(MethodDeclaration n) {
       int k = 0;
+      requiredParams.clear();
       if(n.f2.f1.f1.node instanceof NodeSequence) {
          Vector<Node> params = ((NodeSequence)n.f2.f1.f1.node).nodes;
          if(params.get(0) instanceof FormalParameter && ((FormalParameter)params.get(0)).f0.choice instanceof NodeSequence) {
             Vector<Node> firstArgument = ((NodeSequence)((FormalParameter)params.get(0)).f0.choice).nodes;
-            String param = ((Name)((Type)firstArgument.get(0)).f0.choice).f0.toString();
+
+            String param;
+
+            if(((Type)firstArgument.get(0)).f0.choice instanceof PrimitiveType) {
+               param = ((NodeToken)((PrimitiveType)((Type)firstArgument.get(0)).f0.choice).f0.choice).toString();
+            } else {
+               param = ((Name)((Type)firstArgument.get(0)).f0.choice).f0.toString();
+            }
+
+            Type typeParam = ((Type)firstArgument.get(0));
+            if(typeParam.f1.present() && typeParam.f1.nodes.get(0) instanceof NodeSequence) param += "[]";
+
             param += " " + firstArgument.get(1).toString();
             requiredParams.add(param);
          }
@@ -232,6 +244,8 @@ public class MyVisitor extends DepthFirstVisitor {
                Vector<Node> argument = ((NodeSequence)((FormalParameter)((NodeSequence)node).nodes.get(1)).f0.choice).nodes;
                if(!(argument.get(1) instanceof OptionalParameter)) {
                   String param = ((Name)((Type)argument.get(0)).f0.choice).f0.toString();
+                  Type typeParam = ((Type)argument.get(0));
+                  if(typeParam.f1.present() && typeParam.f1.nodes.get(0) instanceof NodeSequence) param += "[]";
                   param += " " + argument.get(1).toString();
                   requiredParams.add(param);
                } else {
@@ -524,7 +538,7 @@ public class MyVisitor extends DepthFirstVisitor {
       }
       if(nString.equals("+") && !output.endsWith(" ")) {
          output += " " + nString;
-      } else if(nString.equals(",") || nString.equals("throws")) {
+      } else if(nString.equals(",") || nString.equals("throws") || nString.equals("new")) {
          output += nString + spaces[12];
       } else if ((!nString.equals("{") && !nString.equals("}") && !nString.equals(";"))) {
          output += nString;
@@ -649,7 +663,18 @@ public class MyVisitor extends DepthFirstVisitor {
             Vector<Node> params = ((NodeSequence) n.f2.f1.node).nodes;
             if (params.get(0) instanceof FormalParameter && ((FormalParameter) params.get(0)).f0.choice instanceof NodeSequence) {
                Vector<Node> firstArgument = ((NodeSequence) ((FormalParameter) params.get(0)).f0.choice).nodes;
-               String param = ((Name) ((Type) firstArgument.get(0)).f0.choice).f0.toString();
+
+               String param;
+
+               if(((Type)firstArgument.get(0)).f0.choice instanceof PrimitiveType) {
+                  param = ((NodeToken)((PrimitiveType)((Type)firstArgument.get(0)).f0.choice).f0.choice).toString();
+               } else {
+                  param = ((Name)((Type)firstArgument.get(0)).f0.choice).f0.toString();
+               }
+
+               Type typeParam = ((Type)firstArgument.get(0));
+               if(typeParam.f1.present() && typeParam.f1.nodes.get(0) instanceof NodeSequence) param += "[]";
+
                param += " " + firstArgument.get(1).toString();
                requiredParams.add(param);
             }
