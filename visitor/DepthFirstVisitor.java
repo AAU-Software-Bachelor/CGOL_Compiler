@@ -42,16 +42,45 @@ public class DepthFirstVisitor implements Visitor {
    //
 
    /**
-    * f0 -> ( TypeDeclaration() )*
-    * f1 -> <EOF>
+    * f0 -> [ PackageDeclaration() ]
+    * f1 -> ( ImportDeclaration() )*
+    * f2 -> ( TypeDeclaration() )*
+    * f3 -> <EOF>
     */
    public void visit(CompilationUnit n) {
       n.f0.accept(this);
       n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+   }
+
+   /**
+    * f0 -> "package"
+    * f1 -> Name()
+    * f2 -> ";"
+    */
+   public void visit(PackageDeclaration n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   /**
+    * f0 -> "import"
+    * f1 -> Name()
+    * f2 -> [ "." "*" ]
+    * f3 -> ";"
+    */
+   public void visit(ImportDeclaration n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
    }
 
    /**
     * f0 -> ClassDeclaration()
+    *       | InterfaceDeclaration()
     *       | ";"
     */
    public void visit(TypeDeclaration n) {
@@ -65,7 +94,7 @@ public class DepthFirstVisitor implements Visitor {
     * f3 -> [ "extends" Name() ]
     * f4 -> [ "implements" NameList() ]
     * f5 -> "{"
-    * f6 -> ClassBodyDeclaration()
+    * f6 -> ( ClassBodyDeclaration() )+
     * f7 -> "}"
     */
    public void visit(ClassDeclaration n) {
@@ -80,9 +109,53 @@ public class DepthFirstVisitor implements Visitor {
    }
 
    /**
-    * f0 -> ( FieldDeclaration() )*
+    * f0 -> StaticInitializer()
+    *       | ConstructorDeclaration()
+    *       | MethodDeclaration()
+    *       | FieldDeclaration()
+    *       | EmptyStatement()
     */
    public void visit(ClassBodyDeclaration n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" )*
+    * f1 -> ResultType()
+    * f2 -> <IDENTIFIER>
+    * f3 -> "("
+    */
+   public void visit(MethodDeclarationLookahead n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+   }
+
+   /**
+    * f0 -> ( "abstract" | "public" )*
+    * f1 -> "interface"
+    * f2 -> <IDENTIFIER>
+    * f3 -> [ "extends" NameList() ]
+    * f4 -> "{"
+    * f5 -> ( InterfaceMemberDeclaration() )*
+    * f6 -> "}"
+    */
+   public void visit(InterfaceDeclaration n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+      n.f5.accept(this);
+      n.f6.accept(this);
+   }
+
+   /**
+    * f0 -> MethodDeclaration()
+    *       | FieldDeclaration()
+    */
+   public void visit(InterfaceMemberDeclaration n) {
       n.f0.accept(this);
    }
 
@@ -121,7 +194,8 @@ public class DepthFirstVisitor implements Visitor {
    }
 
    /**
-    * f0 -> ( accessor_get_declaration() ( accessor_set_declaration() )? | accessor_set_declaration() ( accessor_get_declaration() )? )
+    * f0 -> accessor_get_declaration() ( accessor_set_declaration() )?
+    *       | accessor_set_declaration() ( accessor_get_declaration() )?
     */
    public void visit(accessor_declarations n) {
       n.f0.accept(this);
@@ -176,6 +250,118 @@ public class DepthFirstVisitor implements Visitor {
    }
 
    /**
+    * f0 -> ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" )*
+    * f1 -> ResultType()
+    * f2 -> MethodDeclarator()
+    * f3 -> [ "throws" NameList() ]
+    * f4 -> ( Block() | ";" )
+    */
+   public void visit(MethodDeclaration n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+   }
+
+   /**
+    * f0 -> <IDENTIFIER>
+    * f1 -> FormalParameters()
+    * f2 -> ( "[" "]" )*
+    */
+   public void visit(MethodDeclarator n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   /**
+    * f0 -> "("
+    * f1 -> [ FormalParameter() ( "," FormalParameter() )* ]
+    * f2 -> ")"
+    */
+   public void visit(FormalParameters n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   /**
+    * f0 -> Type() <IDENTIFIER>
+    *       | "?" OptionalParameter()
+    */
+   public void visit(FormalParameter n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    */
+   public void visit(RequiredParameter n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> Type()
+    * f1 -> <IDENTIFIER>
+    * f2 -> "="
+    * f3 -> Expression()
+    */
+   public void visit(OptionalParameter n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+   }
+
+   /**
+    * f0 -> Literal()
+    */
+   public void visit(DefaultValue n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> [ "public" | "protected" | "private" ]
+    * f1 -> <IDENTIFIER>
+    * f2 -> FormalParameters()
+    * f3 -> [ "throws" NameList() ]
+    * f4 -> "{"
+    * f5 -> [ ExplicitConstructorInvocation() ]
+    * f6 -> ( BlockStatement() )*
+    * f7 -> "}"
+    */
+   public void visit(ConstructorDeclaration n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+      n.f5.accept(this);
+      n.f6.accept(this);
+      n.f7.accept(this);
+   }
+
+   /**
+    * f0 -> "this" Arguments() ";"
+    *       | "super" Arguments() ";"
+    */
+   public void visit(ExplicitConstructorInvocation n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> "static"
+    * f1 -> Block()
+    */
+   public void visit(StaticInitializer n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
     * f0 -> ( PrimitiveType() | Name() )
     * f1 -> ( "[" "]" )*
     */
@@ -199,6 +385,14 @@ public class DepthFirstVisitor implements Visitor {
    }
 
    /**
+    * f0 -> "void"
+    *       | Type()
+    */
+   public void visit(ResultType n) {
+      n.f0.accept(this);
+   }
+
+   /**
     * f0 -> <IDENTIFIER>
     * f1 -> ( "." <IDENTIFIER> )*
     */
@@ -217,7 +411,8 @@ public class DepthFirstVisitor implements Visitor {
    }
 
    /**
-Assignment()
+    * f0 -> Assignment()
+    *       | ConditionalExpression()
     */
    public void visit(Expression n) {
       n.f0.accept(this);
@@ -249,6 +444,177 @@ Assignment()
     *       | "|="
     */
    public void visit(AssignmentOperator n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> ConditionalOrExpression()
+    * f1 -> [ "?" Expression() ":" ConditionalExpression() ]
+    */
+   public void visit(ConditionalExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> ConditionalAndExpression()
+    * f1 -> ( "||" ConditionalAndExpression() )*
+    */
+   public void visit(ConditionalOrExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> InclusiveOrExpression()
+    * f1 -> ( "&&" InclusiveOrExpression() )*
+    */
+   public void visit(ConditionalAndExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> ExclusiveOrExpression()
+    * f1 -> ( "|" ExclusiveOrExpression() )*
+    */
+   public void visit(InclusiveOrExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> AndExpression()
+    * f1 -> ( "^" AndExpression() )*
+    */
+   public void visit(ExclusiveOrExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> EqualityExpression()
+    * f1 -> ( "&" EqualityExpression() )*
+    */
+   public void visit(AndExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> InstanceOfExpression()
+    * f1 -> ( ( "==" | "!=" ) InstanceOfExpression() )*
+    */
+   public void visit(EqualityExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> RelationalExpression()
+    * f1 -> [ "instanceof" Type() ]
+    */
+   public void visit(InstanceOfExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> ShiftExpression()
+    * f1 -> ( ( "<" | ">" | "<=" | ">=" ) ShiftExpression() )*
+    */
+   public void visit(RelationalExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> AdditiveExpression()
+    * f1 -> ( ( "<<" | ">>" | ">>>" ) AdditiveExpression() )*
+    */
+   public void visit(ShiftExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> MultiplicativeExpression()
+    * f1 -> ( ( "+" | "-" ) MultiplicativeExpression() )*
+    */
+   public void visit(AdditiveExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> UnaryExpression()
+    * f1 -> ( ( "*" | "/" | "%" ) UnaryExpression() )*
+    */
+   public void visit(MultiplicativeExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> ( "+" | "-" ) UnaryExpression()
+    *       | PreIncrementExpression()
+    *       | PreDecrementExpression()
+    *       | UnaryExpressionNotPlusMinus()
+    */
+   public void visit(UnaryExpression n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> "++"
+    * f1 -> PrimaryExpression()
+    */
+   public void visit(PreIncrementExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> "--"
+    * f1 -> PrimaryExpression()
+    */
+   public void visit(PreDecrementExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> ( "~" | "!" ) UnaryExpression()
+    *       | CastExpression()
+    *       | PostfixExpression()
+    */
+   public void visit(UnaryExpressionNotPlusMinus n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> "(" PrimitiveType()
+    *       | "(" Name() "[" "]"
+    *       | "(" Name() ")" ( "~" | "!" | "(" | <IDENTIFIER> | "this" | "super" | "new" | Literal() )
+    */
+   public void visit(CastLookahead n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> PrimaryExpression()
+    * f1 -> [ "++" | "--" ]
+    */
+   public void visit(PostfixExpression n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> "(" PrimitiveType() ( "[" "]" )* ")" UnaryExpression()
+    *       | "(" Name() ( "[" "]" )* ")" UnaryExpressionNotPlusMinus()
+    */
+   public void visit(CastExpression n) {
       n.f0.accept(this);
    }
 
@@ -344,6 +710,282 @@ Assignment()
    public void visit(ArrayDimensions n) {
       n.f0.accept(this);
       n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> LabeledStatement()
+    *       | Block()
+    *       | EmptyStatement()
+    *       | StatementExpression() ";"
+    *       | SwitchStatement()
+    *       | IfStatement()
+    *       | WhileStatement()
+    *       | DoStatement()
+    *       | ForStatement()
+    *       | BreakStatement()
+    *       | ContinueStatement()
+    *       | ReturnStatement()
+    *       | ThrowStatement()
+    *       | SynchronizedStatement()
+    *       | TryStatement()
+    */
+   public void visit(Statement n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> <IDENTIFIER>
+    * f1 -> ":"
+    * f2 -> Statement()
+    */
+   public void visit(LabeledStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   /**
+    * f0 -> "{"
+    * f1 -> ( BlockStatement() )*
+    * f2 -> "}"
+    */
+   public void visit(Block n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   /**
+    * f0 -> LocalVariableDeclaration() ";"
+    *       | Statement()
+    */
+   public void visit(BlockStatement n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> Type()
+    * f1 -> VariableDeclarator()
+    * f2 -> ( "," VariableDeclarator() )*
+    */
+   public void visit(LocalVariableDeclaration n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   /**
+    * f0 -> ";"
+    */
+   public void visit(EmptyStatement n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> PreIncrementExpression()
+    *       | PreDecrementExpression()
+    *       | Assignment()
+    *       | PostfixExpression()
+    */
+   public void visit(StatementExpression n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> "switch"
+    * f1 -> "("
+    * f2 -> Expression()
+    * f3 -> ")"
+    * f4 -> "{"
+    * f5 -> ( SwitchLabel() ( BlockStatement() )* )*
+    * f6 -> "}"
+    */
+   public void visit(SwitchStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+      n.f5.accept(this);
+      n.f6.accept(this);
+   }
+
+   /**
+    * f0 -> "case" Expression() ":"
+    *       | "default" ":"
+    */
+   public void visit(SwitchLabel n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> "if"
+    * f1 -> "("
+    * f2 -> Expression()
+    * f3 -> ")"
+    * f4 -> Statement()
+    * f5 -> [ "else" Statement() ]
+    */
+   public void visit(IfStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+      n.f5.accept(this);
+   }
+
+   /**
+    * f0 -> "while"
+    * f1 -> "("
+    * f2 -> Expression()
+    * f3 -> ")"
+    * f4 -> Statement()
+    */
+   public void visit(WhileStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+   }
+
+   /**
+    * f0 -> "do"
+    * f1 -> Statement()
+    * f2 -> "while"
+    * f3 -> "("
+    * f4 -> Expression()
+    * f5 -> ")"
+    * f6 -> ";"
+    */
+   public void visit(DoStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+      n.f5.accept(this);
+      n.f6.accept(this);
+   }
+
+   /**
+    * f0 -> "for"
+    * f1 -> "("
+    * f2 -> [ ForInit() ]
+    * f3 -> ";"
+    * f4 -> [ Expression() ]
+    * f5 -> ";"
+    * f6 -> [ ForUpdate() ]
+    * f7 -> ")"
+    * f8 -> Statement()
+    */
+   public void visit(ForStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+      n.f5.accept(this);
+      n.f6.accept(this);
+      n.f7.accept(this);
+      n.f8.accept(this);
+   }
+
+   /**
+    * f0 -> LocalVariableDeclaration()
+    *       | StatementExpressionList()
+    */
+   public void visit(ForInit n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> StatementExpression()
+    * f1 -> ( "," StatementExpression() )*
+    */
+   public void visit(StatementExpressionList n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+   }
+
+   /**
+    * f0 -> StatementExpressionList()
+    */
+   public void visit(ForUpdate n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> "break"
+    * f1 -> [ <IDENTIFIER> ]
+    * f2 -> ";"
+    */
+   public void visit(BreakStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   /**
+    * f0 -> "continue"
+    * f1 -> [ <IDENTIFIER> ]
+    * f2 -> ";"
+    */
+   public void visit(ContinueStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   /**
+    * f0 -> "return"
+    * f1 -> [ Expression() ]
+    * f2 -> ";"
+    */
+   public void visit(ReturnStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   /**
+    * f0 -> "throw"
+    * f1 -> Expression()
+    * f2 -> ";"
+    */
+   public void visit(ThrowStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+   }
+
+   /**
+    * f0 -> "synchronized"
+    * f1 -> "("
+    * f2 -> Expression()
+    * f3 -> ")"
+    * f4 -> Block()
+    */
+   public void visit(SynchronizedStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+   }
+
+   /**
+    * f0 -> "try"
+    * f1 -> Block()
+    * f2 -> ( "catch" "(" RequiredParameter() ")" Block() )*
+    * f3 -> [ "finally" Block() ]
+    */
+   public void visit(TryStatement n) {
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
    }
 
 }

@@ -1,8 +1,0 @@
-public class DomCard {
-    private String noName;
-    private String nama { get; }
-    private String name { get; public set; }
-    public String email { get; private set; }
-    private String name2 { public get; set; }
-    public String email2 { private get; set; }
-}

@@ -4,10 +4,12 @@
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="JavaParser" />
     <module name="experiment" />
-    <option name="PROGRAM_PARAMETERS" value="inputfile.cgol3" />
+    <option name="PROGRAM_PARAMETERS" value="inputfile.cgol" />
     <method v="2">
       <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_runsh" />
+      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_mkdir" />
       <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_rm" />
+      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_mkdir" />
       <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_touch" />
       <option name="Make" enabled="true" />
     </method>

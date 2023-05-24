@@ -1,0 +1,13 @@
+public class DomCard {
+   public DomCard(String firstArgument, String secondArgument, ?String thirdArgument = "There", ?double fourthArgument = 0.0, ?int fifth = 3) {
+       System.out.println(firstArgument + " - " + secondArgument + " - " + thirdArgument + " - " + fourthArgument);
+   }
+
+    public static void main(String[] args) {
+            new DomCard("My Name is", "WHAT", "Who");
+    }
+
+    public static void test(int[] arg) {
+        System.out.println("hello");
+    }
+}
