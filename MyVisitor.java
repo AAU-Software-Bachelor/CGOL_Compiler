@@ -128,7 +128,7 @@ public class MyVisitor extends DepthFirstVisitor {
 
       fileName = n.f2.toString() + ".java";
 
-      output = "package userdef;\n\n" + output;
+      output = "package outputs;\n\n" + output;
       n.f0.accept(this);
       if(n.f0.present()) output += " ";
       n.f1.accept(this);
@@ -834,7 +834,7 @@ public class MyVisitor extends DepthFirstVisitor {
 
 
    public void writeOutputToFile() throws IOException {
-      Files.createDirectories(Paths.get("outputs/userdef"));
+      Files.createDirectories(Paths.get("outputs"));
 
 
       if(javaFX && order == 0) {
@@ -861,7 +861,7 @@ public class MyVisitor extends DepthFirstVisitor {
                  "            \"windows\": {\n" +
                  "                \"vmArgs\": \"--module-path outputs/lib/javafx/win --add-modules=javafx.controls,javafx.fxml -Djava.library.path=lib/win/bin\",\n" +
                  "            },\n" +
-                 "            \"mainClass\": \"userdef.%s\"\n" +
+                 "            \"mainClass\": \"%s\"\n" +
                  "        }\n" +
                  "    ]\n" +
                  "}", filenameNoExtension, filenameNoExtension);
@@ -871,7 +871,7 @@ public class MyVisitor extends DepthFirstVisitor {
 
 
 
-      Files.write(Paths.get("outputs/userdef/" + fileName), output.getBytes());
+      Files.write(Paths.get("outputs/" + fileName), output.getBytes());
       if (order == 0) {
          try {
             ProcessBuilder builder;
@@ -881,10 +881,10 @@ public class MyVisitor extends DepthFirstVisitor {
                        "java", "--module-path", "outputs/lib/javafx/linux", "--add-modules=javafx.controls,javafx.fxml", "outputs/userdef/" + firstClassName + ".java");
                 */
                builder = new ProcessBuilder(
-                       "java", "@outputs/lib/javafx/extra/run.argfile", "userdef." + firstClassName);
+                       "java", "@outputs/lib/javafx/extra/run.argfile", "outputs." + firstClassName);
             } else {
                builder = new ProcessBuilder(
-                       "javac", "-d", "output", "outputs/userdef/" + firstClassName + ".java");
+                       "javac", "outputs/" + firstClassName + ".java");
             }
 
             builder.redirectErrorStream(true);
@@ -908,7 +908,7 @@ public class MyVisitor extends DepthFirstVisitor {
          }
 
          if(javaFX && order == 0) {
-            System.out.println("The above error is expected but necessary" +
+            System.out.println("The above error is expected but necessary\n" +
                     "Open the outputs folder containing the project in visual studio code.\n" +
                     "If this is done correctly you should see a .vscode folder amongst others.\n" +
                     "From here open the outputs folder and the subfolder userdef.\n" +
