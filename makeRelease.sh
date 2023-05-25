@@ -8,7 +8,7 @@ javac -d build JavaParser.java
 
 cd build
 
-jar cfvm cgol.jar ../META-INF/MANIFEST.MF *.class */*.class
+jar cfvm cgol.jar ../META-INF/MANIFEST.MF *.class */*.class ../lib/javafx/*
 mkdir -p ../release
 mv cgol.jar ../release/cgol.jar
 
