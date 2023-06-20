@@ -479,9 +479,15 @@ public interface Visitor {
 
    /**
     * f0 -> "new" PrimitiveType() ArrayDimensions()
-    *       | "new" Name() ( Arguments() | ArrayDimensions() )
+    *       | "new" Name() AllocationArguments()
     */
    public void visit(AllocationExpression n);
+
+   /**
+    * f0 -> ( Arguments() | ArrayDimensions() )
+    *       | "<" <IDENTIFIER> ">()" Block()
+    */
+   public void visit(AllocationArguments n);
 
    /**
     * f0 -> ( "[" Expression() "]" )+
@@ -490,7 +496,8 @@ public interface Visitor {
    public void visit(ArrayDimensions n);
 
    /**
-    * f0 -> LabeledStatement()
+    * f0 -> MethodDeclaration()
+    *       | LabeledStatement()
     *       | Block()
     *       | EmptyStatement()
     *       | StatementExpression() ";"

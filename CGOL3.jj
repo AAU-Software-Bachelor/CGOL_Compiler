@@ -602,10 +602,12 @@ void Name() :
     void Expression() :
     {printDebugInfo("Expression");}
     {
-      LOOKAHEAD( PrimaryExpression() AssignmentOperator() )
+      LOOKAHEAD( PrimaryExpression() AssignmentOperator())
       Assignment()
     |
       ConditionalExpression()
+   /* |
+      "new" <IDENTIFIER> "<" <IDENTIFIER> ">()" Block()*/
     }
 
     void Assignment() :
@@ -764,8 +766,8 @@ void Name() :
     }
 
     void PrimaryPrefix() :
-    {}
-    {
+    {printDebugInfo("PrimaryPreFix");}
+    { LOOKAHEAD(3)
       Literal()
     |
       Name()
@@ -832,13 +834,25 @@ void Name() :
     }
 
     void AllocationExpression() :
-    {}
+    {printDebugInfo("AllocationExpression");}
     {
-      LOOKAHEAD(2)
+      LOOKAHEAD(3)
       "new" PrimitiveType() ArrayDimensions()
     |
-      "new" Name() ( Arguments() | ArrayDimensions() )
+      "new" Name() AllocationArguments()
     }
+
+    void AllocationArguments() :
+    {printDebugInfo("AllocationArg");}
+    {
+    LOOKAHEAD(3)
+    ( Arguments() | ArrayDimensions() )
+    |
+    "<" <IDENTIFIER> ">()" Block()
+    }
+
+
+
 
     /*
      * The second LOOKAHEAD specification below is to parse to PrimarySuffix
@@ -858,6 +872,9 @@ void Name() :
     void Statement() :
     {}
     {
+      LOOKAHEAD( MethodDeclarationLookahead() )
+      MethodDeclaration()
+    |
       LOOKAHEAD(2)
       LabeledStatement()
     |
@@ -897,7 +914,7 @@ void Name() :
     }
 
     void Block() :
-    {}
+    {printDebugInfo("Block");}
     {
       "{" ( BlockStatement() )* "}"
     }
@@ -941,7 +958,7 @@ void Name() :
     }
 
     void SwitchStatement() :
-    {}
+    {printDebugInfo("switchstatement");}
     {
       "switch" "(" Expression() ")" "{"
         ( SwitchLabel() ( BlockStatement() )* )*

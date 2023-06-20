@@ -165,6 +165,7 @@ public class MyVisitor extends DepthFirstVisitor {
       } else {
          order++;
          try {
+            //Despite what IntelliJ thinks these aren't errors
             JavaParser parser = new JavaParser(new java.io.FileInputStream(n.f1.f0.toString() + ".cgol"));
             Node newDocRoot = parser.CompilationUnit();
             MyVisitor v = new MyVisitor();
@@ -774,8 +775,9 @@ public class MyVisitor extends DepthFirstVisitor {
          }
    }
 
-   private <T> void exportJavaFx(String relativeFolderPath, String relativeOutputDir, Class<T> classToSearch) throws IOException {
+   private <T> void exportJavaFx(String relativeFolderPath, String relativeOutputDir, Class<T> classToSearch, String fileType) throws IOException {
       CodeSource src = MyVisitor.class.getProtectionDomain().getCodeSource();
+      boolean fileTypeSpecified = fileType != null;
       if (src != null) {
          URL jar = src.getLocation();
          ZipInputStream zip = null;
@@ -791,23 +793,25 @@ public class MyVisitor extends DepthFirstVisitor {
                break;
             String name = e.getName();
             System.out.println(name);
-               if (name.startsWith(relativeFolderPath)) {
+               if (name.startsWith(relativeFolderPath) && (!fileTypeSpecified || name.endsWith("." + fileType))) {
                   String[] nameSplit = name.split("/");
                   String nameOnly = nameSplit[nameSplit.length - 1];
                   System.out.println(nameOnly);
                   try (InputStream a = classToSearch.getResourceAsStream(nameOnly)) {
 
                      File file = new File(relativeOutputDir + nameOnly);
-                     file.getParentFile().mkdirs();
-                     file.createNewFile();
+                     if(!file.getParentFile().exists()) {
+                        System.out.println("Folder " + file.getParentFile().toString() + " exists");
+                        file.getParentFile().mkdirs();
+                     }
+                     if(!file.exists()) {
+                        file.createNewFile();
+                     }
                      assert a != null;
                      System.out.println(relativeOutputDir + nameOnly);
-                     if(a == null) {
-                        System.out.println("File not found");
-                     }
                      copyInputStreamToFile(a, file);
                   } catch (IOException | NullPointerException er) {
-                     System.out.println(er);
+                     System.out.println("Cought: " + er);
                   }
                }
          }
@@ -832,16 +836,25 @@ public class MyVisitor extends DepthFirstVisitor {
       }
    }
 
+   public void writeStringToFile(String fileName, String content) throws IOException {
+      BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+      writer.write(content);
+
+      writer.close();
+   }
 
    public void writeOutputToFile() throws IOException {
       Files.createDirectories(Paths.get("outputs"));
 
 
       if(javaFX && order == 0) {
+         System.out.println("JavaFX detected, adjusting compiler for it");
          Files.createDirectories(Paths.get(".vscode"));
-         exportJavaFx("lib/javafx/linux", "outputs/lib/javafx/linux/", javafxFiles.class);
-         exportJavaFx("lib/javafx/vscode/settings", ".vscode/", javafxVSCode.class);
-         exportJavaFx("lib/javafx/extra/", "outputs/lib/javafx/extra/", extrafx.class);
+         exportJavaFx("lib/javafx/linux", "outputs/lib/javafx/linux/", javafxFiles.class, null);
+         exportJavaFx("lib/javafx/vscode/settings", ".vscode/", javafxVSCode.class, null);
+         exportJavaFx("lib/javafx/extra/", "outputs/lib/javafx/extra/", extrafx.class, null);
+
+
 
 
          String filenameNoExtension = fileName.split("\\.")[0];
@@ -874,46 +887,76 @@ public class MyVisitor extends DepthFirstVisitor {
       Files.write(Paths.get("outputs/" + fileName), output.getBytes());
       if (order == 0) {
          try {
-            ProcessBuilder builder;
+            String buildOption = null;
+            ProcessBuilder builder = null;
             if(javaFX && order == 0) {
+               System.out.println("Two build option available:\n1: Run directly\n2: Create app-image\nplease select one by typing it and pressing enter");
+               BufferedReader reader = new BufferedReader(
+                       new InputStreamReader(System.in));
+               buildOption = reader.readLine();
+               switch (buildOption) {
+                  case "1":
+                     builder = new ProcessBuilder(
+                             "bash", "-c", "javac --module-path outputs/lib/javafx/linux --add-modules=javafx.controls,javafx.fxml outputs/" + firstClassName + ".java && java --module-path outputs/lib/javafx/linux --add-modules=javafx.controls,javafx.fxml outputs." + firstClassName);
+                     break;
+                  case "2":
+                     System.out.println("This will take a bit");
+                     String manifestContent = "Manifest-Version: 1.0\nMain-Class: outputs." + firstClassName + "\n";
+                     writeStringToFile("outputs/lib/javafx/extra/MANIFEST.MF",manifestContent);
+                     builder = new ProcessBuilder(
+                             "bash", "-c", "javac --module-path outputs/lib/javafx/linux --add-modules=javafx.controls,javafx.fxml outputs/" + firstClassName + ".java " +
+                             "&& jar cfvm javaFXTemp/" + firstClassName + ".jar outputs/lib/javafx/extra/MANIFEST.MF *.* */*.* ../lib/javafx/*" +
+
+                             "&& jpackage --type app-image --input javaFXTemp --dest javaFXOut --module-path outputs/lib/javafx/linux --add-modules javafx.controls,javafx.fxml,javafx.base,javafx.graphics,javafx.media,javafx.swing,javafx.web " +
+                             "--main-jar " + firstClassName + ".jar --main-class outputs." + firstClassName + " " +
+                             "&& rm -R outputs && rm -R javaFXTemp");
+                     break;
+               }
+
                /*
                builder = new ProcessBuilder(
                        "java", "--module-path", "outputs/lib/javafx/linux", "--add-modules=javafx.controls,javafx.fxml", "outputs/userdef/" + firstClassName + ".java");
                 */
-               builder = new ProcessBuilder(
-                       "java", "@outputs/lib/javafx/extra/run.argfile", "outputs." + firstClassName);
+
+               /*builder = new ProcessBuilder(
+                       "jpackager", "input", ".", "outputs/" + firstClassName);*/
             } else {
                builder = new ProcessBuilder(
                        "javac", "outputs/" + firstClassName + ".java");
             }
+            if(builder != null) {
+               builder.redirectErrorStream(true);
+               Process p = builder.start();
+               BufferedReader reader =
+                       new BufferedReader(new InputStreamReader(p.getInputStream()));
+               StringBuilder Sbuilder = new StringBuilder();
+               String line = null;
+               while ( (line = reader.readLine()) != null) {
+                  Sbuilder.append(line);
+                  Sbuilder.append(System.getProperty("line.separator"));
+               }
+               String result = Sbuilder.toString();
+               System.out.println(result);
 
-            builder.redirectErrorStream(true);
-            Process p = builder.start();
-
-            BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(p.getInputStream()));
-            StringBuilder Sbuilder = new StringBuilder();
-            String line = null;
-            while ( (line = reader.readLine()) != null) {
-               Sbuilder.append(line);
-               Sbuilder.append(System.getProperty("line.separator"));
+               assert buildOption != null;
+               if(javaFX && order == 0 && buildOption.equals("2")) {
+                  exportJavaFx("lib/javafx/linux", ("javaFXOut/" + firstClassName + "/lib/runtime/lib/"), javafxFiles.class, "so");
+                  System.out.println("SUCCESS!! Appimage execuatable located at: javaFXOut/" + firstClassName + "/bin/" + firstClassName);
+                  System.out.println("Double click it to start your javafx program");
+               }
             }
-            String result = Sbuilder.toString();
-            System.out.println(result);
-
-
          } catch (Exception e) {
             System.out.println("There were errors in the Java code and Javac could not compile it. Error:");
             System.out.println(e.toString());
          }
 
          if(javaFX && order == 0) {
-            System.out.println("The above error is expected but necessary\n" +
+            /*System.out.println("The above error is expected but necessary\n" +
                     "Open the outputs folder containing the project in visual studio code.\n" +
                     "If this is done correctly you should see a .vscode folder amongst others.\n" +
                     "From here open the outputs folder and the subfolder userdef.\n" +
                     "Doubleclick your root class' file.(If your root class is \"Domcard\" the file would be called \"DomCard.java\"\n" +
-                    "At the top right corner press the \"play\" button");
+                    "At the top right corner press the \"play\" button");*/
          }
       } else {
          order--;

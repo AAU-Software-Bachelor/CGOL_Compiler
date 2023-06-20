@@ -843,9 +843,19 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
 
    /**
     * f0 -> "new" PrimitiveType() ArrayDimensions()
-    *       | "new" Name() ( Arguments() | ArrayDimensions() )
+    *       | "new" Name() AllocationArguments()
     */
    public R visit(AllocationExpression n, A argu) {
+      R _ret=null;
+      n.f0.accept(this, argu);
+      return _ret;
+   }
+
+   /**
+    * f0 -> ( Arguments() | ArrayDimensions() )
+    *       | "<" <IDENTIFIER> ">()" Block()
+    */
+   public R visit(AllocationArguments n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
       return _ret;
@@ -863,7 +873,8 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
    }
 
    /**
-    * f0 -> LabeledStatement()
+    * f0 -> MethodDeclaration()
+    *       | LabeledStatement()
     *       | Block()
     *       | EmptyStatement()
     *       | StatementExpression() ";"

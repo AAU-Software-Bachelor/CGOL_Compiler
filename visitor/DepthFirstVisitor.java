@@ -697,9 +697,17 @@ public class DepthFirstVisitor implements Visitor {
 
    /**
     * f0 -> "new" PrimitiveType() ArrayDimensions()
-    *       | "new" Name() ( Arguments() | ArrayDimensions() )
+    *       | "new" Name() AllocationArguments()
     */
    public void visit(AllocationExpression n) {
+      n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> ( Arguments() | ArrayDimensions() )
+    *       | "<" <IDENTIFIER> ">()" Block()
+    */
+   public void visit(AllocationArguments n) {
       n.f0.accept(this);
    }
 
@@ -713,7 +721,8 @@ public class DepthFirstVisitor implements Visitor {
    }
 
    /**
-    * f0 -> LabeledStatement()
+    * f0 -> MethodDeclaration()
+    *       | LabeledStatement()
     *       | Block()
     *       | EmptyStatement()
     *       | StatementExpression() ";"

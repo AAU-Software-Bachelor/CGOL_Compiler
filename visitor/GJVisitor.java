@@ -479,9 +479,15 @@ public interface GJVisitor<R,A> {
 
    /**
     * f0 -> "new" PrimitiveType() ArrayDimensions()
-    *       | "new" Name() ( Arguments() | ArrayDimensions() )
+    *       | "new" Name() AllocationArguments()
     */
    public R visit(AllocationExpression n, A argu);
+
+   /**
+    * f0 -> ( Arguments() | ArrayDimensions() )
+    *       | "<" <IDENTIFIER> ">()" Block()
+    */
+   public R visit(AllocationArguments n, A argu);
 
    /**
     * f0 -> ( "[" Expression() "]" )+
@@ -490,7 +496,8 @@ public interface GJVisitor<R,A> {
    public R visit(ArrayDimensions n, A argu);
 
    /**
-    * f0 -> LabeledStatement()
+    * f0 -> MethodDeclaration()
+    *       | LabeledStatement()
     *       | Block()
     *       | EmptyStatement()
     *       | StatementExpression() ";"

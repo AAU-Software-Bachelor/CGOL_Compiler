@@ -707,9 +707,17 @@ public class GJVoidDepthFirst<A> implements GJVoidVisitor<A> {
 
    /**
     * f0 -> "new" PrimitiveType() ArrayDimensions()
-    *       | "new" Name() ( Arguments() | ArrayDimensions() )
+    *       | "new" Name() AllocationArguments()
     */
    public void visit(AllocationExpression n, A argu) {
+      n.f0.accept(this, argu);
+   }
+
+   /**
+    * f0 -> ( Arguments() | ArrayDimensions() )
+    *       | "<" <IDENTIFIER> ">()" Block()
+    */
+   public void visit(AllocationArguments n, A argu) {
       n.f0.accept(this, argu);
    }
 
@@ -723,7 +731,8 @@ public class GJVoidDepthFirst<A> implements GJVoidVisitor<A> {
    }
 
    /**
-    * f0 -> LabeledStatement()
+    * f0 -> MethodDeclaration()
+    *       | LabeledStatement()
     *       | Block()
     *       | EmptyStatement()
     *       | StatementExpression() ";"
