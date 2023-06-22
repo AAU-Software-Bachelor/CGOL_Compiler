@@ -199,17 +199,15 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(IfStatement n) {
-      int i = 0;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      n.f3.accept(this);
-      n.f4.accept(this);
-      n.f5.accept(this);
+      n.f0.accept(this); //if
+      n.f1.accept(this); //(
+      n.f2.accept(this); //Expression
+      n.f3.accept(this); //)
+      n.f4.accept(this); //Block
+      n.f5.accept(this); //Optional else and block
    }
 
    public void visit(ForStatement n) {
-      int i = 0;
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
@@ -223,7 +221,6 @@ public class MyVisitor extends DepthFirstVisitor {
    }
 
    public void visit(ForInit n) {
-      int i = 0;
       n.f0.accept(this);
       output += "; ";
    }
@@ -250,6 +247,7 @@ public class MyVisitor extends DepthFirstVisitor {
    public void visit(MethodDeclaration n) {
       int k = 0;
       requiredParams.clear();
+      optionalParams.clear();
       if(n.f2.f1.f1.node instanceof NodeSequence) {
          Vector<Node> params = ((NodeSequence)n.f2.f1.f1.node).nodes;
          if(params.get(0) instanceof FormalParameter && ((FormalParameter)params.get(0)).f0.choice instanceof NodeSequence) {
@@ -347,8 +345,20 @@ public class MyVisitor extends DepthFirstVisitor {
                leftOutOptional.clear();
             }
          }
+      } else {
+         n.f0.accept(this);
+         if(n.f0.present()) { output += " "; }
+         n.f1.accept(this);
+         output += " ";
+         n.f2.accept(this);
+         output += ") ";
+         n.f3.accept(this);
+         if(n.f3.present()) { output += " "; }
+         n.f4.accept(this);
       }
       optionalParams.clear();
+      requiredParams.clear();
+      leftOutOptional.clear();
    }
 
    private boolean isDublicate(List<CustomOptionalParam> params) {
@@ -438,20 +448,7 @@ public class MyVisitor extends DepthFirstVisitor {
    public void visit(FormalParameters n) {
       int i = 0;
       n.f0.accept(this);
-      /*
-      if(n.f1.present()) {
-         Vector<Node> a = ((NodeSequence)n.f1.node).nodes;
-         a.get(0).accept(this);
-         output += " ";
-         a.get(1).accept(this);
-      }*/
-
    }
-/*
-   public void visit(FormalParameter n) {
-      n.f0.accept(this);
-      output += " ";
-   }*/
 
 
 
@@ -536,7 +533,8 @@ public class MyVisitor extends DepthFirstVisitor {
       if(n.f0.node != null) {
          access = ((NodeChoice)n.f0.node).choice.toString();
       }
-      output += access +  " " + currentField.type  + " get" + capitalizeFirstLetter(currentField.name) + "() { return this." + currentField.name + "; }";
+      output += access +  " " + currentField.type  + " get" + capitalizeFirstLetter(currentField.name) +
+              "() { return this." + currentField.name + "; }";
    }
 
    public void visit(NodeSequence n) {
@@ -550,7 +548,8 @@ public class MyVisitor extends DepthFirstVisitor {
       if(n.f0.node != null) {
          access = ((NodeChoice)n.f0.node).choice.toString();
       }
-      output += access + " void set" + capitalizeFirstLetter(currentField.name) + "(" + currentField.type + " input) { this." + currentField.name + " = input; }";
+      output += access + " void set" + capitalizeFirstLetter(currentField.name) +
+              "(" + currentField.type + " input) { this." + currentField.name + " = input; }";
    }
 
    public void visit(NodeChoice n) {
@@ -890,14 +889,15 @@ public class MyVisitor extends DepthFirstVisitor {
             String buildOption = null;
             ProcessBuilder builder = null;
             if(javaFX && order == 0) {
-               System.out.println("Two build option available:\n1: Run directly\n2: Create app-image\nplease select one by typing it and pressing enter");
+               System.out.println("Two build option available:\n1: Run directly\n2: Create app-image\nPlease select one by typing its number and pressing enter");
                BufferedReader reader = new BufferedReader(
                        new InputStreamReader(System.in));
                buildOption = reader.readLine();
                switch (buildOption) {
                   case "1":
                      builder = new ProcessBuilder(
-                             "bash", "-c", "javac --module-path outputs/lib/javafx/linux --add-modules=javafx.controls,javafx.fxml outputs/" + firstClassName + ".java && java --module-path outputs/lib/javafx/linux --add-modules=javafx.controls,javafx.fxml outputs." + firstClassName);
+                             "bash", "-c", "javac --module-path outputs/lib/javafx/linux --add-modules=javafx.controls,javafx.fxml outputs/" + firstClassName +
+                             ".java && java --module-path outputs/lib/javafx/linux --add-modules=javafx.controls,javafx.fxml outputs." + firstClassName);
                      break;
                   case "2":
                      System.out.println("This will take a bit");
@@ -907,7 +907,8 @@ public class MyVisitor extends DepthFirstVisitor {
                              "bash", "-c", "javac --module-path outputs/lib/javafx/linux --add-modules=javafx.controls,javafx.fxml outputs/" + firstClassName + ".java " +
                              "&& jar cfvm javaFXTemp/" + firstClassName + ".jar outputs/lib/javafx/extra/MANIFEST.MF *.* */*.* ../lib/javafx/*" +
 
-                             "&& jpackage --type app-image --input javaFXTemp --dest javaFXOut --module-path outputs/lib/javafx/linux --add-modules javafx.controls,javafx.fxml,javafx.base,javafx.graphics,javafx.media,javafx.swing,javafx.web " +
+                             "&& jpackage --type app-image --input javaFXTemp --dest javaFXOut --module-path outputs/lib/javafx/linux --add-modules " +
+                             "javafx.controls,javafx.fxml,javafx.base,javafx.graphics,javafx.media,javafx.swing,javafx.web " +
                              "--main-jar " + firstClassName + ".jar --main-class outputs." + firstClassName + " " +
                              "&& rm -R outputs && rm -R javaFXTemp");
                      break;
@@ -941,7 +942,7 @@ public class MyVisitor extends DepthFirstVisitor {
                assert buildOption != null;
                if(javaFX && order == 0 && buildOption.equals("2")) {
                   exportJavaFx("lib/javafx/linux", ("javaFXOut/" + firstClassName + "/lib/runtime/lib/"), javafxFiles.class, "so");
-                  System.out.println("SUCCESS!! Appimage execuatable located at: javaFXOut/" + firstClassName + "/bin/" + firstClassName);
+                  System.out.println("SUCCESS!! App image execuatable located at: javaFXOut/" + firstClassName + "/bin/" + firstClassName);
                   System.out.println("Double click it to start your javafx program");
                }
             }
